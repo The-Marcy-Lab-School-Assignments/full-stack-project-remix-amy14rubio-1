@@ -4,7 +4,7 @@ function TodoItem({ todo, loadTodos }) {
   const handleChange = async (e) => {
     const { error } = await updateTodo(todo.todo_id, { is_complete: e.target.checked });
     if (error) return console.error(error);
-    loadTodos();
+    // loadTodos();
   };
 
   const handleDelete = async () => {
@@ -14,14 +14,12 @@ function TodoItem({ todo, loadTodos }) {
   };
 
   return (
-    <li className="todo-item">
-      <input
-        type="checkbox"
-        checked={todo.is_complete}
-        onChange={handleChange}
-      />
+    <li className='todo-item'>
+      <input type='checkbox' checked={todo.is_complete} onChange={handleChange} />
       <span className={todo.is_complete ? 'completed' : ''}>{todo.title}</span>
-      <button className="delete-btn" onClick={handleDelete}>Delete</button>
+      <button className='delete-btn' onClick={handleDelete}>
+        Delete
+      </button>
     </li>
   );
 }
