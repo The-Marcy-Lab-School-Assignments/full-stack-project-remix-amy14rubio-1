@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getMe, login, register, logout } from './adapters/auth-adapters';
 import AuthPage from './components/AuthPage';
-import TodoPage from './components/TodoPage';
+import Home from './components/Home';
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -16,9 +16,9 @@ function App() {
     checkForSession();
   }, []);
 
-  // Handlers that manage updating the current user. 
-  // Defined in App to ensure that child components only                       
-  // update the current user in a controlled manner.  
+  // Handlers that manage updating the current user.
+  // Defined in App to ensure that child components only
+  // update the current user in a controlled manner.
   const handleLogin = async (username, password) => {
     const { data: user, error } = await login(username, password);
     if (error) return error;
@@ -38,11 +38,12 @@ function App() {
 
   return (
     <main>
-      <h1>Todo App</h1>
-      {currentUser
-        ? <TodoPage currentUser={currentUser} handleLogout={handleLogout} />
-        : <AuthPage handleLogin={handleLogin} handleRegister={handleRegister} />
-      }
+      <h1>Music Journal App</h1>
+      {currentUser ? (
+        <Home currentUser={currentUser} handleLogout={handleLogout} />
+      ) : (
+        <AuthPage handleLogin={handleLogin} handleRegister={handleRegister} />
+      )}
     </main>
   );
 }
