@@ -4,11 +4,11 @@ export const fetchAllMilestones = async () => {
   return handleFetch('/api/milestones');
 };
 
-export const createMilestone = async (title, date, instrument_id, entry_id, piece_id) => {
+export const createMilestone = async (instrument_id, entry_id, piece_id, title, date) => {
   return handleFetch('/api/milestones', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, date, instrument_id, entry_id, piece_id }),
+    body: JSON.stringify({ instrument_id, entry_id, piece_id, title, date }),
   });
 };
 

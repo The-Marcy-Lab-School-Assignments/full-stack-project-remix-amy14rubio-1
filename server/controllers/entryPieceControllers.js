@@ -3,7 +3,7 @@ const entryPieceModel = require('../models/entryPieceModel');
 module.exports.createPiece = async (req, res, next) => {
   try {
     const { entry_id } = req.params;
-    const { instrument_id } = req.body;
+    const { piece_id } = req.body;
 
     // First find the entryPiece to verify ownership
     const entry = await entryPieceModel.find(entry_id);

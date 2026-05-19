@@ -23,7 +23,7 @@ module.exports.create = async (user_id, instrument_id, title, body, pinned) => {
 };
 
 // Updates an note. Returns the updated row.
-module.exports.update = async (note_id, { user_id, instrument_id, title, body, pinned }) => {
+module.exports.update = async (note_id, user_id, instrument_id, title, body, pinned) => {
   const query =
     'UPDATE notes SET user_id = $1, instrument_id = $2, title = $3, body = $4, pinned = $5 WHERE note_id = $6 RETURNING *';
   const { rows } = await pool.query(query, [user_id, instrument_id, title, body, pinned, note_id]);

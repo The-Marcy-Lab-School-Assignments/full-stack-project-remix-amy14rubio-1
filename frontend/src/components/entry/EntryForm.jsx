@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { createEntry } from '../adapters/entry-adapters';
-import { createEntryInstrument } from '../adapters/entryInstrument-adapters';
+import { createEntry } from '../../adapters/entry-adapters';
 
 const MOODS = ['😢', '😠', '😐', '😊', '😂'];
 
-const EntryForm = ({ loadEntries, instruments }) => {
+const EntryForm = ({ loadEntries, instruments, pieces }) => {
   const [selectedInstrumentIds, setSelectedInstrumentIds] = useState([]);
+  const [selectedPieceIds, setSelectedPieceIds] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +24,7 @@ const EntryForm = ({ loadEntries, instruments }) => {
       practiceMinutes,
       true,
       selectedInstrumentIds,
+      selectedPieceIds,
     );
     if (error) return console.error(error);
 
@@ -37,6 +38,12 @@ const EntryForm = ({ loadEntries, instruments }) => {
       prev.includes(instrument_id)
         ? prev.filter((id) => id !== instrument_id)
         : [...prev, instrument_id],
+    );
+  };
+
+  const handlePieceToggle = (piece_id) => {
+    setSelectedPieceIds((prev) =>
+      prev.includes(piece_id) ? prev.filter((id) => id !== piece_id) : [...prev, piece_id],
     );
   };
 
@@ -66,21 +73,36 @@ const EntryForm = ({ loadEntries, instruments }) => {
       <label htmlFor='practiceMinutes-input'>Practice minutes</label>
       <input id='practiceMinutes-input' name='practiceMinutes' type='number' required />
 
-      {/* <input type='checkbox' checked={entry.is_complete} onChange={handleChange} />
-      <span className={todo.is_complete ? 'completed' : ''}>{todo.title}</span> */}
-
       <fieldset>
         <legend>Instruments practiced</legend>
-        {instruments.map((instrument) => (
-          <label key={instrument.instrument_id}>
-            <input
-              type='checkbox'
-              checked={selectedInstrumentIds.includes(instrument.instrument_id)}
-              onChange={() => handleInstrumentToggle(instrument.instrument_id)}
-            />
-            {instrument.nickname || instrument.name}
-          </label>
-        ))}
+        <div className='instruments-fieldset'>
+          {instruments.map((instrument) => (
+            <label key={instrument.instrument_id}>
+              <input
+                type='checkbox'
+                checked={selectedInstrumentIds.includes(instrument.instrument_id)}
+                onChange={() => handleInstrumentToggle(instrument.instrument_id)}
+              />
+              {instrument.nickname || instrument.name}
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Pieces practiced</legend>
+        <div className='pieces-fieldset'>
+          {pieces.map((piece) => (
+            <label key={piece.piece_id}>
+              <input
+                type='checkbox'
+                checked={selectedPieceIds.includes(piece.piece_id)}
+                onChange={() => handlePieceToggle(piece.piece_id)}
+              />
+              {piece.title}
+            </label>
+          ))}
+        </div>
       </fieldset>
 
       <button type='submit'>Save Entry</button>

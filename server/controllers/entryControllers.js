@@ -1,5 +1,6 @@
 const entryModel = require('../models/entryModel');
 const entryInstrumentModel = require('../models/entryInstrumentModel');
+const entryPieceModel = require('../models/entryPieceModel');
 
 module.exports.listEntries = async (req, res, next) => {
   try {
@@ -22,7 +23,8 @@ module.exports.showEntry = async (req, res, next) => {
 
 module.exports.createEntry = async (req, res, next) => {
   try {
-    const { date, title, body, mood, practice_minutes, is_private, instrument_ids } = req.body;
+    const { date, title, body, mood, practice_minutes, is_private, instrument_ids, piece_ids } =
+      req.body;
     if (!title || !date) return res.status(400).send({ error: 'Title and date are required.' });
 
     const entry = await entryModel.create(
@@ -40,6 +42,12 @@ module.exports.createEntry = async (req, res, next) => {
         instrument_ids.map((instrument_id) =>
           entryInstrumentModel.create(entry.entry_id, instrument_id),
         ),
+      );
+    }
+
+    if (piece_ids && piece_ids.length > 0) {
+      await Promise.all(
+        piece_ids.map((piece_id) => entryPieceModel.create(entry.entry_id, piece_id)),
       );
     }
 

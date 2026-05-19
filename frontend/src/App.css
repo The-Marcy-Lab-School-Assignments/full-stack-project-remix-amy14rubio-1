@@ -10,7 +10,129 @@ body {
   color: #1a1a1a;
 }
 
-main {
+.navbar {
+  background-color: rgb(219, 170, 144);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar ul {
+  list-style-type: none;
+  display: flex;
+  text-align: center;
+}
+
+.nav-link {
+  display: block;
+  border-left: 1px solid black;
+  height: 100%;
+  width: 100%;
+  padding: 1rem;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+section {
+  max-width: 70vw;
+  margin: 2rem auto;
+}
+
+form {
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* display: none; */
+}
+
+form h2 {
+  margin-bottom: 1rem;
+  /* font-size: 1.1rem; */
+  /* color: #374151; */
+}
+
+form input,
+form select,
+form textarea {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+form fieldset {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5rem 0;
+  border: none;
+}
+
+form legend {
+  float: left;
+  width: 100%;
+}
+.instruments-fieldset {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 15px;
+}
+
+form fieldset label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+form button[type='submit'] {
+  /* background: #1d4ed8; */
+  /* color: white; */
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.error {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+section h2 {
+  margin: 2rem 0;
+}
+
+.entry-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.entry-card {
+  max-width: 20rem;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+/* main {
   max-width: 600px;
   margin: 2rem auto;
   padding: 0 1rem;
@@ -22,7 +144,6 @@ h1 {
   color: #1d4ed8;
 }
 
-/* Auth forms */
 #auth-section {
   display: flex;
   gap: 1.5rem;
@@ -68,7 +189,6 @@ form button[type='submit'] {
   margin-bottom: 0.5rem;
 }
 
-/* Logged-in view */
 section {
   display: flex;
   flex-direction: column;
@@ -95,77 +215,6 @@ section {
   font-size: 0.9rem;
 }
 
-/* Add todo form */
-#add-todo-form {
-  display: flex;
-  gap: 0.5rem;
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  flex-direction: column;
-}
-
-#add-todo-form label {
-  font-size: 0.9rem;
-  color: #374151;
-  display: none;
-}
-
-#add-todo-form input {
-  flex: 1;
-  padding: 0.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  margin-bottom: 0;
-}
-
-#add-todo-form button {
-  background: #1d4ed8;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-
-/* Todo list */
-#todo-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.todo-item {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.todo-item input[type='checkbox'] {
-  width: 1rem;
-  height: 1rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.todo-item span {
-  flex: 1;
-  font-size: 0.95rem;
-}
-
-.todo-item span.completed {
-  text-decoration: line-through;
-  color: #9ca3af;
-}
-
 .delete-btn {
   background: #dc2626;
   color: white;
@@ -175,11 +224,7 @@ section {
   cursor: pointer;
   font-size: 0.85rem;
   flex-shrink: 0;
-}
-
+} */
+/* 
 @media (min-width: 480px) {
-  #add-todo-form {
-    flex-direction: row;
-    align-items: flex-end;
-  }
-}
+} */

@@ -2,14 +2,119 @@ const pool = require('../db/pool');
 
 // Returns all entries for a specific user, ordered by creation time
 module.exports.listByUser = async (user_id) => {
-  const query = 'SELECT * FROM entries WHERE user_id = $1 ORDER BY entry_id ASC';
+  const query = ` SELECT
+      entries.entry_id,
+      entries.title,
+      entries.body,
+      entries.mood,
+      entries.date,
+      entries.practice_minutes,
+      entries.is_private,
+
+      COALESCE(
+        json_agg(
+          DISTINCT jsonb_build_object(
+            'name', instruments.name,
+            'type', instruments.type,
+            'nickname', instruments.nickname,
+            'instrument_id', instruments.instrument_id,
+            'entry_instrument_id', entry_instruments.entry_instrument_id
+            
+          )
+        ) FILTER (WHERE instruments.instrument_id IS NOT NULL),
+        '[]'
+      ) AS instruments,
+
+      COALESCE(
+        json_agg(
+          DISTINCT jsonb_build_object(
+            'entry_piece_id', entry_pieces.entry_piece_id,
+            'piece_id', pieces.piece_id,
+            'title', pieces.title,
+            'composer', pieces.composer,
+            'status', pieces.status
+          )
+        ) FILTER (WHERE pieces.piece_id IS NOT NULL),
+        '[]'
+      ) AS pieces
+
+    FROM entries
+
+    LEFT JOIN entry_instruments
+      ON entry_instruments.entry_id = entries.entry_id
+
+    LEFT JOIN instruments
+      ON instruments.instrument_id = entry_instruments.instrument_id
+
+    LEFT JOIN entry_pieces
+      ON entry_pieces.entry_id = entries.entry_id
+
+    LEFT JOIN pieces
+      ON pieces.piece_id = entry_pieces.piece_id
+
+    WHERE entries.user_id = $1
+
+    GROUP BY entries.entry_id`;
   const { rows } = await pool.query(query, [user_id]);
   return rows;
 };
 
 // Returns a single entry row (used for ownership checks before update/delete)
 module.exports.find = async (entry_id) => {
-  const query = 'SELECT * FROM entries WHERE entry_id = $1';
+  const query = `SELECT
+      entries.entry_id,
+      entries.user_id,
+      entries.title,
+      entries.body,
+      entries.mood,
+      entries.date,
+      entries.practice_minutes,
+      entries.is_private,
+
+      COALESCE(
+        json_agg(
+          DISTINCT jsonb_build_object(
+            'name', instruments.name,
+            'type', instruments.type,
+            'nickname', instruments.nickname,
+            'instrument_id', instruments.instrument_id,
+            'entry_instrument_id', entry_instruments.entry_instrument_id
+            
+          )
+        ) FILTER (WHERE instruments.instrument_id IS NOT NULL),
+        '[]'
+      ) AS instruments,
+
+      COALESCE(
+        json_agg(
+          DISTINCT jsonb_build_object(
+            'entry_piece_id', entry_pieces.entry_piece_id,
+            'piece_id', pieces.piece_id,
+            'title', pieces.title,
+            'composer', pieces.composer,
+            'status', pieces.status
+          )
+        ) FILTER (WHERE pieces.piece_id IS NOT NULL),
+        '[]'
+      ) AS pieces
+
+    FROM entries
+
+    LEFT JOIN entry_instruments
+      ON entry_instruments.entry_id = entries.entry_id
+
+    LEFT JOIN instruments
+      ON instruments.instrument_id = entry_instruments.instrument_id
+
+    LEFT JOIN entry_pieces
+      ON entry_pieces.entry_id = entries.entry_id
+
+    LEFT JOIN pieces
+      ON pieces.piece_id = entry_pieces.piece_id
+
+    WHERE entries.entry_id = $1
+
+    GROUP BY entries.entry_id`;
   const { rows } = await pool.query(query, [entry_id]);
   return rows[0] || null;
 };

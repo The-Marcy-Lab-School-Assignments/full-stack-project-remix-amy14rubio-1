@@ -16,11 +16,21 @@ export const createEntry = async (
   practice_minutes,
   is_private,
   instrument_ids,
+  piece_ids,
 ) => {
   return handleFetch('/api/entries', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ date, title, body, mood, practice_minutes, is_private, instrument_ids }),
+    body: JSON.stringify({
+      date,
+      title,
+      body,
+      mood,
+      practice_minutes,
+      is_private,
+      instrument_ids,
+      piece_ids,
+    }),
   });
 };
 

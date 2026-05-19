@@ -1,6 +1,18 @@
 const entryInstrumentModel = require('../models/entryInstrumentModel');
 
-module.exports.createInstrument = async (req, res, next) => {
+// module.exports.listEntryInstruments = async (req, res, next) => {
+//   try {
+//     const { entry_id } = req.params;
+//     console.log(entry_id);
+//     const entries = await entryInstrumentModel.listByUser(entry_id);
+//     console.log(entries);
+//     res.send(entries);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+module.exports.createEntryInstrument = async (req, res, next) => {
   try {
     const { entry_id } = req.params;
     const { instrument_id } = req.body;
@@ -17,7 +29,7 @@ module.exports.createInstrument = async (req, res, next) => {
   }
 };
 
-module.exports.deleteInstrument = async (req, res, next) => {
+module.exports.deleteEntryInstrument = async (req, res, next) => {
   try {
     const { entry_id, instrument_id } = req.params;
     // First find the entryInstrument to verify ownership
