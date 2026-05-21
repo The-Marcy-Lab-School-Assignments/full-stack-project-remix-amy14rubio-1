@@ -20,34 +20,34 @@ function Home({
       <Navbar />
       <section>
         <div id='user-controls'>
-          <span>
-            Welcome, <strong>{currentUser.username}</strong>!
-          </span>
+          <h1 className='home-title'>
+            Welcome, {currentUser.username[0].toUpperCase() + currentUser.username.slice(1)}!
+          </h1>
           <button onClick={handleLogout}>Log Out</button>
         </div>
         {/* add total practice minutes */}
         {/* add recent entries */}
-        <h2>Recent Entries </h2>
+        <h2>{'Recent Entries'.toUpperCase()}</h2>
 
         <EntryList
-          entries={entries.slice(0, 3)}
+          entries={[...entries].reverse().slice(0, 3)}
           loadEntries={loadEntries}
           instruments={instruments}
         />
 
         {/* add recent milestones */}
-        <h2>Recent Milestones </h2>
+        <h2>{'Recent Milestones'.toUpperCase()} </h2>
         <MilestoneList
-          milestones={milestones.slice(0, 3)}
+          milestones={[...milestones].reverse().slice(0, 3)}
           loadMilestones={loadMilestones}
           entries={entries}
           instruments={instruments}
         />
 
         {/* add recent notes */}
-        <h2>Pinned Notes </h2>
+        <h2>{'Pinned Notes'.toUpperCase()} </h2>
         <NoteList
-          notes={notes.filter((note) => note.pinned).slice(0, 3)}
+          notes={notes.filter((note) => note.pinned)}
           loadNotes={loadNotes}
           instruments={instruments}
         />

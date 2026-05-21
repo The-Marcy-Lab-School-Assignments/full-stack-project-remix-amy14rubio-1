@@ -13,26 +13,48 @@ function EntryPage({
   error,
   showControls,
 }) {
+  const [formReveal, setFormReveal] = useState(false);
+  const handleForm = () => {
+    setFormReveal((prev) => !prev);
+  };
   return (
     <main>
       <Navbar />
       <section>
-        <div id='user-controls'>
-          <span>
-            Welcome, <strong>{currentUser.username}</strong>!
-          </span>
+        {!formReveal && (
+          <h1>{currentUser.username[0].toUpperCase() + currentUser.username.slice(1)}'s Journal</h1>
+        )}
+
+        <div className='entry-container'>
+          {formReveal && (
+            <EntryForm
+              loadEntries={loadEntries}
+              instruments={instruments}
+              pieces={pieces}
+              handleForm={handleForm}
+            />
+          )}
+
+          <button
+            onClick={handleForm}
+            className={`create-entry ${formReveal ? 'cancel-entry' : ''}`}
+          >
+            {formReveal ? 'x' : 'Create Entry'}
+          </button>
         </div>
-        <EntryForm loadEntries={loadEntries} instruments={instruments} pieces={pieces} />
+
         {isLoading && <p>Loading entries...</p>}
         {error && <p className='error'>Something went wrong: {error}</p>}
-        <h2>Past Entries </h2>
-        <EntryList
-          entries={entries}
-          loadEntries={loadEntries}
-          instruments={instruments}
-          pieces={pieces}
-          showControls={showControls}
-        />
+
+        {!formReveal && (
+          <EntryList
+            entries={entries}
+            loadEntries={loadEntries}
+            instruments={instruments}
+            pieces={pieces}
+            showControls={showControls}
+          />
+        )}
       </section>
     </main>
   );

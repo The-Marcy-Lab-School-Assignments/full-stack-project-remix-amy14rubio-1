@@ -1,19 +1,12 @@
-import EntryInstrumentItem from './EntryInstrumentItem';
-
-const EntryInstrumentList = ({ entryId, entryInstruments, loadEntries }) => {
+const EntryInstrumentList = ({ entryInstruments }) => {
   return (
-    <section>
-      <ul className='entry-list'>
-        {entryInstruments.map((instrument) => (
-          <EntryInstrumentItem
-            key={instrument.entry_instrument_id}
-            entryId={entryId}
-            instrument={instrument}
-            loadEntries={loadEntries}
-          />
-        ))}
-      </ul>
-    </section>
+    <ul className='entry-list'>
+      {entryInstruments.map((instrument) => (
+        <li key={instrument.entry_instrument_id} className='entry-list-item'>
+          {instrument.nickname || instrument.name}
+        </li>
+      ))}
+    </ul>
   );
 };
 

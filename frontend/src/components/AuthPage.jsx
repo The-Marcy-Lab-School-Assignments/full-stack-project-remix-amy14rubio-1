@@ -17,21 +17,21 @@ function LoginForm({ handleLogin }) {
     <form onSubmit={handleSubmit}>
       <h2>Log In</h2>
       <input
-        type="text"
-        placeholder="Username"
+        type='text'
+        placeholder='Username'
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required
       />
       <input
-        type="password"
-        placeholder="Password"
+        type='password'
+        placeholder='Password'
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      {errorMessage && <p className="error">{errorMessage}</p>}
-      <button type="submit">Log In</button>
+      {errorMessage && <p className='error'>{errorMessage}</p>}
+      <button type='submit'>Log In</button>
     </form>
   );
 }
@@ -53,30 +53,32 @@ function RegisterForm({ handleRegister }) {
     <form onSubmit={handleSubmit}>
       <h2>Register</h2>
       <input
-        type="text"
-        placeholder="Username"
+        type='text'
+        placeholder='Username'
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required
       />
       <input
-        type="password"
-        placeholder="Password"
+        type='password'
+        placeholder='Password'
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      {errorMessage && <p className="error">{errorMessage}</p>}
-      <button type="submit">Register</button>
+      {errorMessage && <p className='error'>{errorMessage}</p>}
+      <button type='submit'>Register</button>
     </form>
   );
 }
 
 function AuthPage({ handleLogin, handleRegister }) {
   return (
-    <div id="auth-section">
-      <LoginForm handleLogin={handleLogin} />
-      <RegisterForm handleRegister={handleRegister} />
+    <div id='auth-section-container'>
+      <div id='auth-section'>
+        <LoginForm handleLogin={handleLogin} />
+        <RegisterForm handleRegister={handleRegister} />
+      </div>
     </div>
   );
 }

@@ -273,7 +273,7 @@ Unless otherwise noted, all endpoints require authentication.
 | PATCH  | `/api/instruments/:instrument_id` | `{ name, type, nickname }` | `{ instrument_id, name, type, nickname }`   |
 | DELETE | `/api/instruments/:instrument_id` | —                          | `{ message }`                               |
 
-### Tag endpoints
+### Tag endpoints _(stretch)_
 
 | Method | Endpoint            | Request Body | Response             |
 | ------ | ------------------- | ------------ | -------------------- |
@@ -309,14 +309,14 @@ Unless otherwise noted, all endpoints require authentication.
 | PATCH  | `/api/milestones/:milestone_id` | `{ title }`                                         | `{ milestone_id, title, date, instrument_id, entry_id, piece_id }`             |
 | DELETE | `/api/milestones/:milestone_id` | —                                                   | `{ message }`                                                                  |
 
-### Post endpoints (does not require authentication)
+### Post endpoints (does not require authentication) _(stretch)_
 
 | Method | Endpoint              | Request Body | Response                                                                                                                     |
 | ------ | --------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | GET    | `/api/posts`          | —            | `[{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[] }]`           |
 | GET    | `/api/posts/:post_id` | —            | `{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[], comments[] }` |
 
-### Post endpoints
+### Post endpoints _(stretch)_
 
 | Method | Endpoint              | Request Body                                       | Response                                                                                                         |
 | ------ | --------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -324,14 +324,14 @@ Unless otherwise noted, all endpoints require authentication.
 | PATCH  | `/api/posts/:post_id` | `{ body, is_seeking_advice, tag_ids[] }`           | `{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[] }` |
 | DELETE | `/api/posts/:post_id` | —                                                  | `{ message }`                                                                                                    |
 
-### Post tag endpoints
+### Post tag endpoints _(stretch)_
 
 | Method | Endpoint                           | Request Body | Response                           |
 | ------ | ---------------------------------- | ------------ | ---------------------------------- |
 | POST   | `/api/posts/:post_id/tags`         | `{ tag_id }` | `{ post_tag_id, post_id, tag_id }` |
 | DELETE | `/api/posts/:post_id/tags/:tag_id` | —            | `{ message }`                      |
 
-### Post recording endpoints
+### Post recording endpoints _(stretch)_
 
 | Method | Endpoint                                       | Request Body                       | Response                                                  |
 | ------ | ---------------------------------------------- | ---------------------------------- | --------------------------------------------------------- |
@@ -339,7 +339,7 @@ Unless otherwise noted, all endpoints require authentication.
 | POST   | `/api/posts/:post_id/recordings`               | `{ url, duration_seconds, title }` | `{ recording_id, post_id, url, duration_seconds, title }` |
 | DELETE | `/api/posts/:post_id/recordings/:recording_id` | —                                  | `{ message }`                                             |
 
-### Saved post endpoints
+### Saved post endpoints _(stretch)_
 
 | Method | Endpoint                    | Request Body  | Response                                     |
 | ------ | --------------------------- | ------------- | -------------------------------------------- |
@@ -347,7 +347,7 @@ Unless otherwise noted, all endpoints require authentication.
 | POST   | `/api/saved-posts`          | `{ post_id }` | `{ saved_id, user_id, post_id, saved_at }`   |
 | DELETE | `/api/saved-posts/:post_id` | —             | `{ message }`                                |
 
-### Comment endpoints
+### Comment endpoints _(stretch)_
 
 | Method | Endpoint                                   | Request Body | Response                                                                                 |
 | ------ | ------------------------------------------ | ------------ | ---------------------------------------------------------------------------------------- |
@@ -415,25 +415,76 @@ After running `npm run db:seed`, these accounts are available:
 swe-casestudy-7-todo-app/
 ├── frontend/               # React app (Vite)
 │   ├── src/
-│   │   ├── App.jsx         # Root component: currentUser state, session rehydration, auth handlers
+│   │   ├── App.jsx         # Root component: currentUser state, session rehydration, auth handlers, routing
+│   │   ├── BodyClassController.jsx         # Root component: currentUser state, session rehydration, auth handlers, routing
 │   │   ├── adapters/
-│   │   │   ├── auth-adapters.js  # Fetch adapters for /api/auth/* endpoints
-│   │   │   └── todo-adapters.js  # Fetch adapters for /api/todos/* endpoints
+│   │   │   ├── auth-adapters.js
+│   │   │   ├── entry-adapters.js
+│   │   │   ├── entryInstrument-adapters.js
+│   │   │   ├── entryPiece-adapters.js
+│   │   │   ├── instrument-adapters.js
+│   │   │   ├── milestone-adapters.js
+│   │   │   ├── note-adapters.js
+│   │   │   ├── piece-adapters.js
+│   │   │   └── handleFetch.js
 │   │   └── components/
-│   │       ├── AuthPage.jsx    # Login + Register forms (shown when logged out)
-│   │       ├── TodoPage.jsx    # Main app container (shown when logged in)
-│   │       ├── AddTodoForm.jsx # Form to create a new todo
-│   │       ├── TodoList.jsx    # Renders a list of TodoItems
-│   │       └── TodoItem.jsx    # Single todo: checkbox, title, delete button
+│   │       ├── AuthPage.jsx
+│   │       ├── Home.jsx
+│   │       ├── Navbar.jsx
+│   │       ├── ProfilePage.jsx
+│   │       ├── entry/
+│   │       │   ├── EntryPage.jsx
+│   │       │   ├── EntryForm.jsx
+│   │       │   ├── EntryList.jsx
+│   │       │   ├── EntryCard.jsx
+│   │       │   ├── EntryDisplay.jsx
+│   │       │   ├── EntryEditForm.jsx
+│   │       │   └── EntryInstrumentManager.jsx
+│   │       ├── instrument/
+│   │       │   ├── InstrumentPage.jsx
+│   │       │   ├── InstrumentForm.jsx
+│   │       │   ├── InstrumentList.jsx
+│   │       │   └── InstrumentCard.jsx
+│   │       ├── milestone/
+│   │       │   ├── MilestonePage.jsx
+│   │       │   ├── MilestoneForm.jsx
+│   │       │   ├── MilestoneList.jsx
+│   │       │   ├── MilestoneCard.jsx
+│   │       │   ├── MilestoneDisplay.jsx
+│   │       │   └── MilestoneEditForm.jsx
+│   │       ├── note/
+│   │       │   ├── NotePage.jsx
+│   │       │   ├── NoteForm.jsx
+│   │       │   ├── NoteList.jsx
+│   │       │   ├── NoteCard.jsx
+│   │       │   ├── NoteDisplay.jsx
+│   │       │   └── NoteEditForm.jsx
+│   │       └── piece/
+│   │           ├── PiecePage.jsx
+│   │           ├── PieceForm.jsx
+│   │           ├── PieceList.jsx
+│   │           └── PieceCard.jsx
 │   └── vite.config.js      # Proxies /api requests to Express in development
 └── server/                 # Express + Postgres API
     ├── index.js            # App entry point, route definitions
     ├── controllers/
-    │   ├── authControllers.js  # register, login, logout, getMe
-    │   └── todoControllers.js  # list, create, update, delete todos
+    │   ├── authControllers.js
+    │   ├── entryController.js
+    │   ├── entryInstrumentController.js
+    │   ├── entryPieceController.js
+    │   ├── instrumentController.js
+    │   ├── milestoneController.js
+    │   ├── noteController.js
+    │   └── pieceController.js
     ├── models/
-    │   ├── userModel.js    # SQL queries for the users table
-    │   └── todoModel.js    # SQL queries for the todos table
+    │   ├── userModel.js
+    │   ├── entryModel.js
+    │   ├── entryInstrumentModel.js
+    │   ├── entryPieceModel.js
+    │   ├── instrumentModel.js
+    │   ├── milestoneModel.js
+    │   ├── noteModel.js
+    │   └── pieceModel.js
     ├── middleware/
     │   ├── checkAuthentication.js  # Blocks unauthenticated requests
     │   └── logRoutes.js            # Logs each incoming request

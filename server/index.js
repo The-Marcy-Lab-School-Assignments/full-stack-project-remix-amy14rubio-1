@@ -56,11 +56,6 @@ app.delete('/api/entries/:entry_id', checkAuthentication, entryControllers.delet
 // ====================================
 // Entry instrument routes
 // ====================================
-// app.get(
-//   '/api/entries/:entry_id/instruments',
-//   checkAuthentication,
-//   entryInstrumentControllers.listEntryInstruments,
-// );
 app.post(
   '/api/entries/:entry_id/instruments',
   checkAuthentication,

@@ -1,23 +1,32 @@
 const MilestoneDisplay = ({ milestone, onDelete, onEdit, showControls }) => {
   return (
-    <li className='milestone-card'>
+    <div className='milestone-card'>
       <div className='milestone-card-header'>
         <span className='milestone-card-title'>{milestone.title}</span>
+        {showControls && (
+          <div className='milestone-card-controls'>
+            <button onClick={onDelete}>
+              <img src='/recycle-bin-icon.png' className='milestone-icon' />
+            </button>
+            <button onClick={onEdit}>
+              <img src='/pencil-icon.png' className='milestone-icon' />
+            </button>
+          </div>
+        )}
       </div>
       <p className='milestone-card-meta'>{milestone.date.split('T')[0]}</p>
-      <p className='milestone-card-meta'>
-        {milestone.instrument.nickname || milestone.instrument.name}
-      </p>
-      <p className='milestone-card-meta'>{milestone.entry.title}</p>
-      <p className='milestone-card-meta'>{milestone.piece.title}</p>
-
-      {showControls && (
-        <div className='milestone-card-controls'>
-          <button onClick={onDelete}>Delete</button>
-          <button onClick={onEdit}>Edit</button>
-        </div>
-      )}
-    </li>
+      <div className='milestone-tags'>
+        <p
+          className={
+            milestone.instrument.nickname || milestone.instrument.name ? 'milestone-tag' : ''
+          }
+        >
+          {milestone.instrument.nickname || milestone.instrument.name}
+        </p>
+        <p className={milestone.entry.title ? 'milestone-tag' : ''}>{milestone.entry.title}</p>
+        <p className={milestone.piece.title ? 'milestone-tag' : ''}>{milestone.piece.title}</p>
+      </div>
+    </div>
   );
 };
 

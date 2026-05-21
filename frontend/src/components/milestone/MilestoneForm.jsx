@@ -1,7 +1,14 @@
 import { useState } from 'react';
 import { createMilestone } from '../../adapters/milestone-adapters';
 
-const MilestoneForm = ({ milestones, loadMilestones, entries, instruments, pieces }) => {
+const MilestoneForm = ({
+  milestones,
+  loadMilestones,
+  entries,
+  instruments,
+  pieces,
+  handleForm,
+}) => {
   const [selectedInstrumentIds, setSelectedInstrumentIds] = useState([]);
 
   const handleSubmit = async (e) => {
@@ -19,6 +26,8 @@ const MilestoneForm = ({ milestones, loadMilestones, entries, instruments, piece
     await loadMilestones();
 
     form.reset();
+
+    handleForm();
   };
 
   return (
@@ -61,7 +70,7 @@ const MilestoneForm = ({ milestones, loadMilestones, entries, instruments, piece
         ))}
       </select>
 
-      <button type='submit'>Save Milestone</button>
+      <button type='submit'>Save</button>
     </form>
   );
 };

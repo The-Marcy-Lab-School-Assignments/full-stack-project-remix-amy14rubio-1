@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { createNote } from '../../adapters/note-adapters';
 
-const NoteForm = ({ instruments, loadNotes }) => {
+const NoteForm = ({ instruments, loadNotes, handleForm }) => {
   const [formData, setFormData] = useState({
     title: '',
     body: '',
@@ -23,10 +23,13 @@ const NoteForm = ({ instruments, loadNotes }) => {
     if (error) return console.error(error);
     setFormData({ title: '', body: '', instrument_id: '' });
     await loadNotes();
+    handleForm();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='entry-form'>
+      <h2>New Note</h2>
+
       <label>Title</label>
       <input
         name='title'
@@ -52,7 +55,7 @@ const NoteForm = ({ instruments, loadNotes }) => {
           </option>
         ))}
       </select>
-      <button type='submit'>Add Note</button>
+      <button type='submit'>Save</button>
     </form>
   );
 };

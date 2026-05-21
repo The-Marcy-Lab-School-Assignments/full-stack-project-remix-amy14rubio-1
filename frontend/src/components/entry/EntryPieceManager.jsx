@@ -22,20 +22,22 @@ const EntryPieceManager = ({ entryId, entryPieces, pieces, onPiecesChange }) => 
   );
 
   return (
-    <div>
-      <ul>
+    <div className='entry-list-controls'>
+      <ul className='entry-list-form'>
         {localPieces.map((piece) => (
-          <li key={piece.piece_id}>
-            {piece.title}
-            <button type='button' onClick={() => handleRemove(piece.piece_id)}>
-              Remove
-            </button>
-          </li>
+          <button
+            key={piece.piece_id}
+            className='entry-list-form-item'
+            type='button'
+            onClick={() => handleRemove(piece.piece_id)}
+          >
+            <li>{piece.title}</li>x
+          </button>
         ))}
       </ul>
       {availablePieces.length >= 1 && (
         <select onChange={handleAdd} value=''>
-          <option value=''>Add song</option>
+          <option value=''>+</option>
           {availablePieces.map((piece) => (
             <option key={piece.piece_id} value={piece.piece_id}>
               {piece.title}

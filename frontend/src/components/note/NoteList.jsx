@@ -10,8 +10,8 @@ const NoteList = ({ notes, loadNotes, instruments, showControls }) => {
     <div>
       {pinned.length > 0 && (
         <>
-          <h3>Pinned</h3>
-          <ul>
+          {showControls && <h2>Pinned</h2>}
+          <ul className='note-list'>
             {pinned.map((note) => (
               <NoteCard
                 key={note.note_id}
@@ -24,8 +24,8 @@ const NoteList = ({ notes, loadNotes, instruments, showControls }) => {
           </ul>
         </>
       )}
-      {showControls && <h3>All Notes</h3>}
-      <ul>
+      {showControls && <h2>All Notes</h2>}
+      <ul className='note-list'>
         {unpinned.map((note) => (
           <NoteCard
             key={note.note_id}

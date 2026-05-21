@@ -14,6 +14,8 @@ import { fetchAllPieces } from './adapters/piece-adapters';
 import { fetchAllMilestones } from './adapters/milestone-adapters';
 import { fetchAllNotes } from './adapters/note-adapters';
 
+import BodyClassController from './BodyClassController';
+
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [entries, setEntries] = useState([]);
@@ -125,6 +127,7 @@ function App() {
 
   return (
     <Router>
+      <BodyClassController />
       <Routes>
         <Route
           path='/'

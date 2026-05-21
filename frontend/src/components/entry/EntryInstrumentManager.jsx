@@ -32,20 +32,22 @@ const EntryInstrumentManager = ({
   );
 
   return (
-    <div>
-      <ul>
+    <div className='entry-list-controls'>
+      <ul className='entry-list-form'>
         {localInstruments.map((instrument) => (
-          <li key={instrument.instrument_id}>
-            {instrument.nickname || instrument.name}
-            <button type='button' onClick={() => handleRemove(instrument.instrument_id)}>
-              Remove
-            </button>
-          </li>
+          <button
+            key={instrument.instrument_id}
+            className='entry-list-form-item'
+            type='button'
+            onClick={() => handleRemove(instrument.instrument_id)}
+          >
+            <li>{instrument.nickname || instrument.name}</li>x
+          </button>
         ))}
       </ul>
       {availableInstruments.length >= 1 && (
         <select onChange={handleAdd} value=''>
-          <option value=''>Add instrument</option>
+          <option value=''>+</option>
           {availableInstruments.map((instrument) => (
             <option key={instrument.instrument_id} value={instrument.instrument_id}>
               {instrument.nickname || instrument.name}

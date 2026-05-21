@@ -10,6 +10,9 @@ import EntryDisplay from './EntryDisplay';
 import EntryEditForm from './EntryEditForm';
 
 const EntryCard = ({ entry, loadEntries, instruments, pieces, showControls }) => {
+  if (!entry) {
+    return <div className='entry-card empty-card' />;
+  }
   const [isEditing, setIsEditing] = useState(false);
   const [currentInstruments, setCurrentInstruments] = useState(entry.instruments);
   const [currentPieces, setCurrentPieces] = useState(entry.pieces);

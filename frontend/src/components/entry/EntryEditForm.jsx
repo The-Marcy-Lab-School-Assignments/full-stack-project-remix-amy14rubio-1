@@ -15,7 +15,7 @@ const EntryEditForm = ({
   onPiecesChange,
 }) => {
   return (
-    <li className='entry-card'>
+    <div className='entry-card'>
       <form onSubmit={handleUpdate}>
         <label>Title</label>
         <input name='title' value={formData.title} onChange={handleChange} />
@@ -23,25 +23,35 @@ const EntryEditForm = ({
         <label>Entry</label>
         <textarea name='body' value={formData.body} onChange={handleChange} rows={4} />
 
-        <label>Mood</label>
-        <select name='mood' value={formData.mood} onChange={handleChange}>
-          {MOODS.map((emoji, i) => (
-            <option key={i} value={i + 1}>
-              {emoji}
-            </option>
-          ))}
-        </select>
-
         <label>Date</label>
         <input name='date' type='date' value={formData.date} onChange={handleChange} />
 
-        <label>Practice Minutes</label>
-        <input
-          name='practice_minutes'
-          type='number'
-          value={formData.practice_minutes}
-          onChange={handleChange}
-        />
+        <div className='form-group'>
+          <div>
+            <label>Practice Minutes</label>
+            <input
+              name='practice_minutes'
+              type='number'
+              value={formData.practice_minutes}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Mood</label>
+            <select
+              className='mood-select'
+              name='mood'
+              value={formData.mood}
+              onChange={handleChange}
+            >
+              {MOODS.map((emoji, i) => (
+                <option key={i} value={i + 1}>
+                  {emoji}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         <EntryInstrumentManager
           entryId={entry.entry_id}
@@ -57,13 +67,15 @@ const EntryEditForm = ({
           onPiecesChange={onPiecesChange}
         />
 
-        <button type='submit'>Save</button>
+        <div className='entry-controls'>
+          <button type='submit'>Save</button>
 
-        <button type='button' onClick={onCancel}>
-          Cancel
-        </button>
+          <button type='button' onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
       </form>
-    </li>
+    </div>
   );
 };
 

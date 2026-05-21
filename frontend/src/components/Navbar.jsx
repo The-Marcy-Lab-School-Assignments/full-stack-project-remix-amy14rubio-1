@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
   return (
-    <nav className='navbar'>
+    <nav className={`navbar ${location.pathname === '/entries' ? 'nav-entry' : ''}`}>
       <div className='logo'>
         <Link className='logo-link' to='/'>
           Music Journal App
