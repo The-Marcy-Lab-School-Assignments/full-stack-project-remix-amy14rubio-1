@@ -1,5 +1,6 @@
 const pieceModel = require('../models/pieceModel');
-
+const { scrapeLinkPreview } = require('../services/linkPreviewService.js');
+const { getProvider } = require('../services/getProvider.js');
 module.exports.listPieces = async (req, res, next) => {
   try {
     const pieces = await pieceModel.listByUser(req.session.user_id);
@@ -21,9 +22,29 @@ module.exports.showPiece = async (req, res, next) => {
 
 module.exports.createPiece = async (req, res, next) => {
   try {
-    const { title } = req.body;
+    const { title, instrument_id, composer, status, recording_url, sheet_music_url } = req.body;
     if (!title) return res.status(400).send({ error: 'Title is required.' });
-    const piece = await pieceModel.create(title, req.session.user_id);
+    let preview = {
+      title: null,
+      thumbnail: null,
+    };
+    if (sheet_music_url) {
+      preview = await scrapeLinkPreview(sheet_music_url);
+    }
+    const provider = sheet_music_url ? getProvider(sheet_music_url) : null;
+
+    const piece = await pieceModel.create(
+      req.session.user_id,
+      instrument_id,
+      title,
+      composer,
+      status,
+      recording_url,
+      sheet_music_url,
+      preview.title,
+      preview.thumbnail,
+      provider,
+    );
     res.status(201).send(piece);
   } catch (err) {
     next(err);
@@ -61,5 +82,49 @@ module.exports.deletePiece = async (req, res, next) => {
     res.send(destroyedPiece);
   } catch (err) {
     next(err);
+  }
+};
+
+module.exports.uploadFile = async (req, res, next) => {
+  try {
+    const pieceId = req.params.piece_id;
+    const userId = req.session.user_id;
+    const { buffer, originalname, mimetype } = req.file;
+
+    const piece = await pieceModel.uploadPieceFile(pieceId, buffer, originalname, mimetype, userId);
+
+    res.json(piece);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.getPieceLinkPreview = async (req, res) => {
+  try {
+    const { url } = req.query;
+
+    if (!url) {
+      return res.status(400).json({
+        error: 'URL required',
+      });
+    }
+
+    try {
+      new URL(url);
+    } catch {
+      return res.status(400).json({
+        error: 'Invalid URL',
+      });
+    }
+
+    const preview = await scrapeLinkPreview(url);
+
+    res.json(preview);
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      error: 'Failed to fetch preview',
+    });
   }
 };

@@ -1,35 +1,46 @@
 import EntryInstrumentList from './EntryInstrumentList';
 import EntryPieceList from './EntryPieceList';
 
-//either change moods to urls or classnames
-const MOODS = ['sad', 'angry', 'eh', 'happy', 'funny'];
+const getEmojiName = (emojiChar) => {
+  // Returns the standard Unicode block name for the emoji
+  const charCode = emojiChar.codePointAt(0);
+  return charCode;
+};
 
-const EntryDisplay = ({ entry, onDelete, onEdit, loadEntries, showControls }) => {
+//either change moods to urls or classnames
+const MOODS = ['😢', '😠', '😐', '😊', '😂'];
+
+const EntryDisplay = ({ entry, onEdit, loadEntries, showControls }) => {
   return (
-    <div className='entry-card'>
+    <div className='entry-card' onClick={onEdit}>
       <div className='entry-card-header'>
         <p className='entry-card-title'>{entry.title}</p>
-        <p className='entry-card-meta'>{entry.date.split('T')[0]}</p>
       </div>
-      {/* <span className='entry-card-mood'>{MOODS[entry.mood - 1]}</span> */}
-      <p className='entry-card-body'>{entry.body}</p>
-      <div className='entry-tags'>
-        <EntryInstrumentList entryInstruments={entry.instruments} />
-        <EntryPieceList entryPieces={entry.pieces} />
-      </div>
-      {showControls && (
-        <div className='entry-footer'>
-          <div className='entry-card-controls'>
-            <button onClick={onDelete}>
-              <img src='/recycle-bin-icon.png' className='entry-icon' />
-            </button>
+      {showControls && <p className='entry-card-meta'>{entry.date.split('T')[0]}</p>}
+      {entry.body && <p className='entry-card-body'>{entry.body}</p>}
 
-            <button onClick={onEdit}>
-              <img src='/pencil-icon.png' className='entry-icon' />
-            </button>
-          </div>
-          <p className='entry-card-practice-minutes'>Practiced: {entry.practice_minutes} mins</p>
+      {entry.practice_minutes && entry.mood ? (
+        <p className='entry-card-practice'>
+          Practiced for {entry.practice_minutes} minutes and felt {MOODS[entry.mood - 1]}{' '}
+          {/* {getEmojiName(MOODS[entry.mood - 1])} */}
+        </p>
+      ) : entry.practice_minutes && !entry.mood ? (
+        <p className='entry-card-practice'>Practiced for {entry.practice_minutes} minutes</p>
+      ) : !entry.practice_minutes && entry.mood ? (
+        <p className='entry-card-practice'>This practice session felt {MOODS[entry.mood - 1]}</p>
+      ) : (
+        <></>
+      )}
+
+      {showControls && (
+        // <div className='entry-footer'>
+        //   {showControls && (
+        <div className='entry-tags'>
+          <EntryInstrumentList entryInstruments={entry.instruments} />
+          <EntryPieceList entryPieces={entry.pieces} />
         </div>
+        //   )}
+        // </div>
       )}
     </div>
   );

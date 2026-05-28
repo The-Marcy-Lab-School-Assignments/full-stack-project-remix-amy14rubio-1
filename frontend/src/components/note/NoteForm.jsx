@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { createNote } from '../../adapters/note-adapters';
 
-const NoteForm = ({ instruments, loadNotes, handleForm }) => {
+const NoteForm = ({ instruments, loadNotes, handleCancel }) => {
   const [formData, setFormData] = useState({
     title: '',
     body: '',
     instrument_id: '',
+    pinned: false,
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -18,34 +20,54 @@ const NoteForm = ({ instruments, loadNotes, handleForm }) => {
       formData.title,
       formData.body,
       formData.instrument_id || null,
-      false,
+      formData.pinned,
     );
     if (error) return console.error(error);
-    setFormData({ title: '', body: '', instrument_id: '' });
+    setFormData({ title: '', body: '', instrument_id: '', pinned: false });
     await loadNotes();
-    handleForm();
+    handleCancel();
   };
 
   return (
     <form onSubmit={handleSubmit} className='entry-form'>
-      <h2>New Note</h2>
-
-      <label>Title</label>
+      <label htmlFor='title-input' style={{ display: 'none' }}>
+        Title
+      </label>
       <input
+        id='title-input'
         name='title'
+        type='text'
+        placeholder='New Note'
         value={formData.title}
         onChange={handleChange}
-        placeholder='Note title'
         required
       />
-      <label>Body</label>
+
+      {/* <label>Body</label>
       <textarea
         name='body'
         value={formData.body}
         onChange={handleChange}
         placeholder='Write your note...'
         rows={4}
+      /> */}
+      <label htmlFor='body-input' style={{ display: 'none' }}>
+        Note body
+      </label>
+      <textarea
+        id='body-input'
+        name='body'
+        rows={4}
+        value={formData.body}
+        onChange={handleChange}
+        placeholder='Write your note here...'
       />
+      <div className='note-checkbox'>
+        <label>
+          <input name='pinned' type='checkbox' checked={formData.pinned} onChange={handleChange} />
+          Pinned
+        </label>
+      </div>
       <label>Instrument (optional)</label>
       <select name='instrument_id' value={formData.instrument_id} onChange={handleChange}>
         <option value=''>No instrument</option>

@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Ancizar+Serif:ital,wght@0,300..900;1,300..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
 :root {
-  --primary-color: rgb(233, 217, 201);
+  --primary-color: rgb(230, 230, 230);
   --font-color: rgb(39, 39, 35);
+  --white-color: rgb(248, 248, 248);
   --title-font: 'Playfair Display', sans-serif;
   --text-font: 'Ancizar Serif', serif;
 }
@@ -15,26 +16,21 @@
 
 /* ============================================================
    BASE / GLOBAL
-   Body, typography, links, sections shared across all pages
    ============================================================ */
 
 body {
-  font-family: system-ui, sans-serif;
   color: var(--font-color);
   overflow-x: hidden;
-  font-family: var(--text-font);
-  background-image: url('/note-paper.png');
+  font-family: var(--text-font), sans-serif;
+  background-image: url('/bg.png');
   background-size: cover;
+  /* background-color: var(--primary-color); */
+  /* background-size: cover; */
   background-attachment: fixed;
-}
-
-body.entries-page {
-  background-image: url('/table.png');
 }
 
 h1 {
   text-align: center;
-  color: var(--primary-color);
 }
 
 h2 {
@@ -72,13 +68,9 @@ section h2 {
 
 section h2:before {
   content: '';
-  display: block;
   position: absolute;
-  /* background-image: url('/note-paper-small.png'); */
-  /* background-size: cover; */
   transform: scale(1.1);
   width: 100%;
-  height: inherit;
   inset: 0;
   z-index: -1;
 }
@@ -91,17 +83,16 @@ section h2:before {
 
 /* ============================================================
    NAVBAR
-   Top navigation bar and logo
    ============================================================ */
 
 .navbar {
-  /* background-color: var(--primary-color); */
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   font-size: 1.1rem;
-  border-bottom: 1px dashed var(--font-color);
+  margin-bottom: 5rem;
+  border-bottom: 0.8px solid var(--font-color);
 }
 
 .navbar ul {
@@ -114,15 +105,7 @@ section h2:before {
   display: block;
   height: 100%;
   width: 100%;
-  padding: 1rem;
-}
-
-.nav-entry {
-  border-bottom: 1px dashed var(--primary-color);
-}
-
-.nav-entry a {
-  color: var(--primary-color);
+  padding: 1.5rem;
 }
 
 .logo-link {
@@ -130,8 +113,1285 @@ section h2:before {
 }
 
 /* ============================================================
+   HOME VIEW
+   ============================================================ */
+
+#home-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid var(--font-color);
+  position: relative;
+  padding: 1rem;
+}
+
+.home-title {
+  color: var(--font-color);
+  font-family: var(--title-font);
+  font-size: 3.5rem;
+  font-weight: 100;
+  transform: scaleY(1.25);
+  transform-origin: bottom;
+}
+
+#home-header:before {
+  content: '';
+  border: 1px solid var(--font-color);
+  background-color: var(--font-color);
+  height: 3px;
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+}
+
+#home-header h2 {
+  width: auto;
+  margin: 0;
+  font-weight: 100;
+  letter-spacing: -1px;
+  padding: 0.2rem;
+}
+
+.home-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 3rem;
+  height: 150vh;
+}
+
+.home-entries {
+  grid-row: 1 / span 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  color: var(--font-color);
+}
+
+.home-milestones {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.home-milestones .milestone-card {
+  color: var(--font-color);
+  background: url('/milestone.png');
+  background-position: center top;
+  background-size: cover;
+  height: fit-content;
+  padding: 3rem 0.5rem;
+  box-shadow: 0 2px 3px rgba(85, 80, 72, 0.5);
+}
+
+.home-notes {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-notes .note-card {
+  min-width: 100%;
+  height: fit-content;
+  padding: 3rem 0.5rem;
+  background-image: url('/note-paper.png');
+  background-size: cover;
+  color: var(--font-color);
+  box-shadow: 0 2px 3px rgba(128, 128, 128, 0.5);
+}
+
+.table {
+  flex: 1;
+  /* background-image: url('/table.png'); */
+  /* background-size: cover; */
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  min-height: 0;
+  /* padding: 2rem; */
+}
+
+.home-note-container {
+  flex: 1;
+  /* border: 1px dashed var(--font-color); */
+  background: transparent;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  min-height: 0;
+  /* padding: 2rem; */
+}
+
+.corkboard {
+  flex: 1;
+  background-image: url('/corkboard.png');
+  background-size: contain;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  min-height: 0;
+  padding: 2rem;
+}
+
+.home-notes h2 {
+  text-align: right;
+  width: 100%;
+}
+
+.home-view .entry-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 30rem;
+  height: auto;
+  padding: 2.5rem;
+  box-shadow: 0 2px 3px rgba(128, 128, 128, 0.5);
+
+  background-image: url('/entry-paper.png');
+  background-size: cover;
+  gap: 1rem;
+}
+
+.home-view .entry-card:nth-child(even) p {
+  text-align: right;
+}
+
+.home-view .entry-card:nth-child(even) .entry-card-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ============================================================
+   ENTRY CARD
+   ============================================================ */
+
+.entry-card {
+  padding: 1.5rem 2rem 1.5rem 2.5rem;
+  height: 100%;
+  position: relative;
+}
+
+.entry-card-body {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.entry-card-header {
+  border-bottom: 1px solid var(--font-color);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.entry-card-title,
+.milestone-card-title,
+.note-card-title {
+  font-size: 1.4rem;
+}
+
+.entry-card-meta,
+.milestone-card-meta,
+.note-card-meta {
+  font-size: 1.1rem;
+}
+
+.entry-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 2rem 4rem;
+}
+
+.entry-card-controls,
+.milestone-card-controls,
+.note-card-controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.entry-card-controls .delete-trigger {
+  width: 40px;
+  height: 40px;
+  background-color: var(--white-color);
+  box-shadow: 0 3px 5px grey;
+  border-radius: 100%;
+}
+
+.entry-controls,
+.milestone-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.entry-controls button {
+  padding: 0.4rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--font-color);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.entry-tags,
+.milestone-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.entry-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.entry-list-item {
+  border: 1px solid black;
+  list-style-type: none;
+  display: flex;
+  gap: 0.5rem;
+  padding: 4px;
+  border-radius: 3px;
+  width: fit-content;
+}
+
+.entry-list-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.entry-list-controls select {
+  background-color: var(--font-color);
+  color: var(--primary-color);
+  border-radius: 3px;
+  border: 1px solid var(--primary-color);
+  width: 1.7rem;
+  outline: none;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  appearance: none;
+  cursor: pointer;
+}
+
+.entry-list-form-item {
+  border: 1px solid var(--primary-color);
+  background-color: var(--font-color);
+  color: var(--primary-color);
+  border-radius: 3px;
+  display: flex;
+  padding: 3px;
+  gap: 5px;
+  align-items: baseline;
+  cursor: pointer;
+}
+
+.entry-card textarea,
+.entry-card input,
+.entry-card .mood-select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--font-color);
+  border-radius: 3px;
+  background-color: transparent;
+  resize: none;
+}
+
+.entry-card input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0%);
+}
+
+.entry-icon,
+.milestone-icon {
+  width: 1.5rem;
+  padding: 0.1rem;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+input[type='date']::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(100%);
+}
+
+.create-entry,
+.create-milestone {
+  align-self: center;
+  justify-self: center;
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--white-color);
+  box-shadow: 0 3px 5px grey;
+  border: none;
+  border-radius: 100%;
+  color: var(--font-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.entry-container,
+.milestone-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem;
+  position: relative;
+}
+
+.milestone-container form select {
+  background-color: transparent;
+  outline: 0;
+  color: var(--primary-color);
+  padding: 0.2rem;
+}
+
+.cancel-entry,
+.cancel-milestone {
+  background-color: transparent;
+  border: none;
+  color: var(--primary-color);
+  position: absolute;
+  top: 0;
+  right: 21%;
+  font-size: 1.4rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+/* ============================================================
+   ENTRY FORM
+   ============================================================ */
+
+.entry-form,
+.piece-form {
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 4rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  color: var(--primary-color);
+  background-color: var(--font-color);
+  width: 40vw;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.entry-form:before,
+.piece-form:before {
+  content: '';
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  background-color: var(--primary-color);
+  z-index: -1;
+}
+
+.entry-card form {
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group {
+  display: inline-flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.form-group div {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.form-group input,
+.form-group select {
+  text-align: center;
+  width: 3rem;
+  outline: none;
+  color: var(--primary-color);
+  background-color: transparent;
+}
+
+.milestone-form-group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 2rem 0;
+  width: 100%;
+}
+
+.milestone-form-group div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.milestone-form-group select {
+  max-width: 8rem;
+}
+
+.tag-group {
+  display: flex;
+  align-items: first baseline;
+  gap: 15px;
+}
+
+.note-card textarea,
+.piece-form input,
+.piece-form select {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5rem;
+  outline: none;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  resize: none;
+  background-color: transparent;
+  color: var(--font-color);
+}
+
+#title-input::placeholder {
+  color: color-mix(in srgb, var(--primary-color) 60%, transparent);
+  font-family: var(--title-font);
+  font-weight: 500;
+  opacity: 1;
+}
+
+#body-input::placeholder,
+.entry-form input::placeholder {
+  color: color-mix(in srgb, var(--primary-color) 60%, transparent);
+}
+
+#body-input {
+  width: 100%;
+  caret-color: var(--primary-color);
+  border: none;
+  outline: none;
+  height: 25vh;
+  resize: none;
+  background-color: transparent;
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+#title-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 1rem;
+  font-family: var(--title-font);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--primary-color);
+  caret-color: var(--primary-color);
+  transition:
+    opacity 0.2s ease,
+    transform 0.15s ease;
+}
+
+.row-input {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+}
+
+#practiceMinutes-input {
+  border: none;
+  border-bottom: 1px solid var(--primary-color);
+}
+
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--font-color);
+  border-radius: 4px;
+  cursor: pointer;
+  background: transparent;
+  position: relative;
+}
+
+input[type='checkbox']:checked::before {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  color: var(--font-color);
+  transform: scale(1.2);
+}
+
+.entry-form .note-checkbox input[type='checkbox']:checked::before {
+  color: var(--primary-color);
+}
+
+.entry-form .note-checkbox input[type='checkbox'] {
+  border: 1px solid var(--primary-color);
+}
+
+#date-input {
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.note-checkbox {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0.5rem 0;
+  border: none;
+}
+
+.note-checkbox label {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.instruments-fieldset,
+.pieces-fieldset {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 15px;
+}
+
+.entry-list-form {
+  list-style-type: none;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.entry-list-form select {
+  width: 10px;
+  border: none;
+}
+
+.entry-form button[type='submit'],
+.piece-form button[type='submit'] {
+  border: 1px solid var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  width: fit-content;
+  align-self: flex-end;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+#auth-section input,
+.piece-form input {
+  color: var(--primary-color);
+}
+
+/* ============================================================
+   JOURNAL VIEW
+   ============================================================ */
+
+.journal-view {
+  perspective: 80vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  position: relative;
+}
+
+.journal-view .entry-card {
+  background-image: url('./entry-paper.png');
+  background-size: cover;
+  box-shadow: 0 5px 5px rgba(171, 171, 171, 0.1);
+}
+
+.book {
+  position: relative;
+  width: 40vw;
+  height: 60vh;
+  transform-style: preserve-3d;
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+}
+
+.page-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.page-front {
+  transform: rotateY(180deg);
+}
+
+.book-spine {
+  position: absolute;
+  top: 4%;
+  left: 0%;
+  height: 92%;
+  width: 2%;
+  background: var(--font-color);
+  transform: scale(1.1);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.page-face .entry-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 4rem;
+  gap: 15px;
+  background-color: var(--primary-color);
+}
+
+.entry-card-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.entry-card-body,
+.entry-card-practice {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-face .front-cover,
+.page-face .back-cover {
+  background-image: linear-gradient(var(--font-color), rgba(0, 0, 0, 1));
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 40%;
+}
+
+.page-slider {
+  flex: 1;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  touch-action: none;
+}
+
+.page-slider::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 999px;
+}
+
+.page-slider::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: transparent;
+}
+
+.page-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 3rem;
+  height: 10px;
+  border-radius: 1rem;
+  background: white;
+  cursor: pointer;
+}
+
+.page-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  cursor: pointer;
+}
+
+.page-slider:hover::-webkit-slider-thumb {
+  transform: scale(1.06);
+}
+
+.page-slider:hover::-moz-range-thumb {
+  transform: scale(1.06);
+}
+
+.page-indicator {
+  font-size: 13px;
+  color: var(--primary-color);
+  min-width: 60px;
+  text-align: center;
+  font-family: sans-serif;
+}
+
+/* ============================================================
+   MILESTONES
+   ============================================================ */
+
+.milestone-header {
+  display: flex;
+  align-items: first baseline;
+  justify-content: space-between;
+  margin: auto;
+  margin-bottom: 3rem;
+  width: 100%;
+}
+
+.milestone-header h1 {
+  color: var(--font-color);
+  font-size: 3rem;
+  font-family: var(--title-font);
+  font-weight: 100;
+}
+
+.milestone-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.milestone-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: 15px;
+  padding: 1.5rem 2rem 1.5rem 2.5rem;
+  position: relative;
+  color: var(--font-color);
+  height: 15rem;
+  min-width: 18rem;
+  max-width: 25rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: url('/milestone.png');
+  box-shadow: 0 3px 5px rgba(128, 128, 128, 0.5);
+  background-position: center top;
+  background-size: cover;
+}
+
+.milestone-tag {
+  border: 1px solid var(--primary-color);
+  list-style-type: none;
+  display: flex;
+  gap: 0.5rem;
+  padding: 4px;
+  border-radius: 3px;
+  width: fit-content;
+}
+
+.milestone-card form {
+  width: 80%;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.milestone-card form button {
+  border: 1px solid var(--font-color);
+  background-color: transparent;
+  padding: 0.2rem 1rem;
+  border-radius: 3px;
+}
+
+.milestone-card input {
+  border: 1px solid var(--font-color);
+  outline: none;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background-color: transparent;
+}
+
+.milestone-card-controls button {
+  padding: 0.2rem 0.5rem;
+  width: 40px;
+  height: 40px;
+  background-color: var(--white-color);
+  box-shadow: 0 3px 5px grey;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.milestone-controls {
+  justify-content: center;
+}
+
+/* ============================================================
+   NOTES
+   ============================================================ */
+
+.note-list-container h2 {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 5rem;
+}
+
+.note-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  /* margin-bottom: 5rem; */
+}
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  gap: 15px;
+  padding: 1.5rem 2rem 1.5rem 2.5rem;
+  position: relative;
+  color: var(--font-color);
+  height: 15rem;
+  min-width: 18rem;
+  max-width: 25rem;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: url('/note-paper.png');
+  box-shadow: 0 3px 5px rgba(128, 128, 128, 0.5);
+
+  background-size: cover;
+}
+
+.note-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.note-card form {
+  width: 100%;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  text-align: left;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.note-card form textarea {
+  padding-bottom: 1rem;
+  min-height: 5rem;
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.note-card form button {
+  border: 1px solid var(--font-color);
+  background-color: transparent;
+  padding: 0.2rem 1rem;
+  border-radius: 3px;
+}
+
+.note-card input {
+  border: 1px solid var(--font-color);
+  outline: none;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background-color: transparent;
+}
+
+.note-card-controls button {
+  padding: 0.2rem 0.5rem;
+  width: 40px;
+  height: 40px;
+  background-color: var(--white-color);
+  box-shadow: 0 3px 5px grey;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+}
+
+.note-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.milestone-card input:focus,
+.milestone-card input:not(:focus),
+.note-card input:not(:focus),
+.note-card input:focus {
+  color: var(--font-color);
+}
+
+/* ============================================================
+   PIECES
+   ============================================================ */
+
+.piece-header {
+  display: flex;
+  align-items: first baseline;
+  justify-content: space-between;
+  margin: auto;
+  margin-bottom: 3rem;
+  width: 70vw;
+}
+
+.piece-header h1 {
+  color: var(--font-color);
+  font-size: 3rem;
+  font-family: var(--title-font);
+  font-weight: 100;
+}
+
+.piece-list {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  gap: 0.3rem;
+}
+
+.piece-card {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 8px;
+  padding: 1.5rem 1.5rem 1.5rem 1.5rem;
+  position: relative;
+  color: var(--primary-color);
+  height: auto;
+  width: 70vw;
+}
+
+.piece-card:before {
+  content: '';
+  display: block;
+  position: absolute;
+  background-color: var(--font-color);
+  width: 100%;
+  inset: 0;
+  z-index: -1;
+}
+
+.piece-card-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.piece-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.piece-tags p {
+  height: fit-content;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid var(--font-color);
+  color: var(--font-color);
+}
+
+.piece-upload-button {
+  border: 0.8px dashed var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  background-color: transparent;
+  color: var(--primary-color);
+}
+
+.piece-media {
+  display: flex;
+  justify-content: center;
+  /* width: fit-content; */
+}
+
+.piece-modal {
+  position: fixed;
+  inset: 0;
+  background-color: var(--font-color);
+  color: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.piece-grid {
+  /* width: 60vw; */
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 5rem;
+  justify-content: center;
+  /* align-items: center; */
+  padding: 3rem;
+}
+
+.piece-scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+}
+
+.piece-section {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.piece-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.piece-title h3 {
+  margin-top: 3rem;
+  font-size: 2rem;
+}
+
+.piece-title p {
+  font-size: 1.5rem;
+}
+/* .piece-related-entries .entry-card {
+  padding: 2rem 2.5rem;
+}
+.piece-related-entries {
+  margin-bottom: 1rem;
+} */
+
+.piece-section .piece-media img,
+.piece-section object {
+  width: 30rem;
+  height: 40rem;
+}
+
+.link-preview {
+  border: 1px solid var(--font-color);
+}
+
+.link-preview img {
+  width: 50px;
+  height: 50px;
+}
+
+.link-preview a {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* ============================================================
+   SHEET MUSIC MODAL
+   ============================================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.sheet-modal {
+  width: 50rem;
+  height: 30rem;
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sheet-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--font-color);
+}
+
+.sheet-modal-header h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.modal-close {
+  border: none;
+  background: transparent;
+  align-self: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--font-color);
+  width: 36px;
+  height: 36px;
+  border-radius: 3px;
+}
+
+.modal-close:hover {
+  background: #f3f4f6;
+}
+
+.sheet-music-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: #f5f5f5;
+  padding: 0.3rem;
+  border-radius: 3px;
+}
+
+.sheet-music-tabs button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: lightgray;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.sheet-music-tabs button.active {
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  color: var(--font-color);
+}
+
+.sheet-modal-content {
+  min-height: 180px;
+}
+
+.upload-dropzone {
+  border: 1px dashed #d1d5db;
+  color: var(--font-color);
+  height: 15rem;
+  border-radius: 8px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.upload-dropzone:hover {
+  border-color: lightgray;
+  background: #fafafa;
+}
+
+.upload-dropzone p {
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.upload-dropzone span {
+  font-size: 0.9rem;
+}
+
+.url-input-row input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  margin-bottom: 12rem;
+  color: var(--font-color);
+}
+
+.url-input-row input:focus {
+  outline: none;
+  border-color: #999;
+}
+
+.sheet-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.cancel-btn {
+  border: none;
+  background: transparent;
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  color: var(--font-color);
+}
+
+.confirm-btn {
+  border: none;
+  background: var(--font-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirm-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
    AUTH
-   Login / signup section
    ============================================================ */
 
 #auth-section-container {
@@ -142,16 +1402,23 @@ section h2:before {
 }
 
 #auth-section {
-  display: flex;
-  flex-direction: row;
-  background-color: var(--font-color);
+  display: grid;
   color: var(--primary-color);
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   align-items: center;
   justify-content: center;
+  background-color: var(--font-color);
   width: 60vw;
   height: 50vh;
-  padding: 2rem 6rem 4.8rem 6rem;
-  gap: 4rem;
+  padding: 3rem;
+  gap: 2rem;
+}
+
+#auth-section > div {
+  transform: scale(1.1);
+  justify-self: center;
+  grid-column: 1 / span 2;
 }
 
 #auth-section form {
@@ -172,24 +1439,10 @@ section h2:before {
   border: 1px solid var(--primary-color);
   border-radius: 3px;
   min-width: 18vw;
-
-  /* width: 100%; */
   padding: 0.4rem;
 }
 
 #auth-section input::placeholder {
-  color: var(--primary-color);
-}
-
-#auth-section input:focus,
-.milestone-card input:focus,
-.note-card input:focus {
-  color: var(--primary-color);
-}
-
-#auth-section input:not(:focus),
-.milestone-card input:not(:focus),
-.note-card input:not(:focus) {
   color: var(--primary-color);
 }
 
@@ -204,617 +1457,7 @@ section h2:before {
 }
 
 /* ============================================================
-   HOME VIEW
-   Entry list on the home/dashboard page
-   ============================================================ */
-
-.home-title {
-  color: var(--font-color);
-  font-size: 2.5rem;
-}
-
-.home-view,
-.milestone-list,
-.note-list {
-  color: var(--primary-color);
-}
-
-.home-view .entry-card {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 30rem;
-  height: auto;
-  gap: 15px;
-}
-
-.home-view .entry-card:before,
-.milestone-card:before,
-.note-card:before {
-  content: '';
-  display: block;
-  position: absolute;
-  background-color: var(--font-color);
-  /* background-image: url('/note-paper-small.png'); */
-  /* background-size: cover; */
-  transform: rotate(180deg);
-  width: 100%;
-  height: inherit;
-  inset: 0;
-  z-index: -1;
-}
-
-.home-view .entry-card-header {
-  border-bottom: 1px solid var(--primary-color);
-}
-
-.home-view .entry-list-item {
-  border: 1px solid var(--primary-color);
-}
-
-.home-view {
-  min-width: 70vw;
-}
-
-/* ============================================================
-   ENTRY CARD
-   Shared entry card styles used across home, journal, and form views
-   ============================================================ */
-
-/* -- Base card -- */
-.entry-card {
-  padding: 1.5rem 2rem 1.5rem 2.5rem;
-  height: 100%;
-  position: relative;
-}
-
-.entry-card-body {
-  max-width: 100%;
-  overflow-wrap: break-word;
-}
-
-.entry-card-header {
-  border-bottom: 1px solid black;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.entry-card-title,
-.milestone-card-title,
-.note-card-title {
-  font-size: 1.4rem;
-}
-
-.entry-card-meta,
-.milestone-card-meta,
-.note-card-meta {
-  font-size: 0.9rem;
-}
-
-.entry-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  /* padding: 1.5rem; */
-  padding: 1.5rem 2rem 1.5rem 2.5rem;
-}
-
-/* -- Card controls -- */
-.entry-card-controls,
-.milestone-card-controls,
-.note-card-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.entry-card-controls button {
-  background-color: transparent;
-  border: 1px solid var(--font-color);
-  border-radius: 3px;
-}
-
-.entry-controls,
-.milestone-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.entry-controls button {
-  padding: 0.4rem 1rem;
-  background-color: transparent;
-  border: 1px solid var(--font-color);
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-/* -- Card tags and lists -- */
-.entry-tags,
-.milestone-tags {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.entry-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: stretch;
-}
-
-.entry-list-item {
-  border: 1px solid black;
-  list-style-type: none;
-  display: flex;
-  /* flex-wrap: wrap; */
-  gap: 0.5rem;
-  padding: 4px;
-  border-radius: 3px;
-  width: fit-content;
-}
-
-.entry-list-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.entry-list-controls select {
-  background-color: var(--font-color);
-  color: var(--primary-color);
-  border-radius: 3px;
-  border: none;
-  width: 1.5rem;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  appearance: none;
-  cursor: pointer;
-}
-
-.entry-list-form-item {
-  border: 1px solid var(--font-color);
-  background-color: var(--font-color);
-  color: var(--primary-color);
-  border-radius: 3px;
-  display: flex;
-  padding: 4px;
-  gap: 5px;
-  align-items: baseline;
-  cursor: pointer;
-}
-
-/* -- Inline editable fields inside a card -- */
-.entry-card textarea,
-.entry-card input,
-.entry-card .mood-select {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid var(--font-color);
-  border-radius: 3px;
-  background-color: transparent;
-  resize: none;
-}
-
-.entry-card input[type='date']::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  filter: invert(0%);
-}
-
-/* -- Shared icon button styles -- */
-.entry-icon,
-.milestone-icon {
-  width: 3.5rem;
-  padding: 0.2rem 1.1rem;
-  display: flex;
-  align-items: center;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.milestone-icon {
-  filter: invert(100%) sepia(100%) saturate(300%) hue-rotate(0deg) brightness(110%);
-}
-
-input[type='date']::-webkit-calendar-picker-indicator {
-  cursor: pointer;
-  filter: invert(100%) sepia(100%) saturate(300%) hue-rotate(0deg) brightness(110%);
-}
-
-/* -- Create / cancel entry buttons -- */
-.create-entry,
-.create-milestone {
-  align-self: center;
-  justify-self: center;
-  text-align: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--font-color);
-  border: 1px solid var(--primary-color);
-  border-radius: 3px;
-  color: var(--primary-color);
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-.entry-container,
-.milestone-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0.5rem;
-  position: relative;
-}
-
-.cancel-entry,
-.cancel-milestone {
-  background-color: transparent;
-  border: none;
-  color: var(--primary-color);
-  position: absolute;
-  top: 0;
-  right: 13%;
-  font-size: 1.4rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-}
-
-/* ============================================================
-   ENTRY FORM
-   New/edit entry form — full-page dark overlay style
-   ============================================================ */
-
-.entry-form {
-  border: 1px solid var(--primary-color);
-  border-radius: 8px;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  color: var(--primary-color);
-  min-width: 50vw;
-  /* position: relative; */
-}
-
-/* Dark full-page backdrop behind the form */
-.entry-form:before {
-  content: '';
-  position: fixed;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  background-color: var(--font-color);
-  z-index: -1;
-}
-
-.entry-card form,
-.form-group div {
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.entry-form h2 {
-  margin-bottom: 1rem;
-}
-
-/* -- Form inputs -- */
-.entry-form input,
-.entry-form select,
-.entry-form textarea,
-.note-card textarea {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px dotted var(--primary-color);
-  border-radius: 4px;
-  resize: none;
-  background-color: transparent;
-  color: var(--primary-color);
-}
-
-.entry-form textarea::placeholder,
-.note-card textarea::placeholder {
-  color: var(--primary-color);
-}
-
-/* -- Checkbox styling -- */
-input[type='checkbox'] {
-  appearance: none;
-  -webkit-appearance: none;
-
-  width: 18px;
-  height: 18px;
-  border: 1px dotted var(--primary-color);
-  border-radius: 4px;
-  cursor: pointer;
-  background: transparent;
-  position: relative;
-}
-
-input[type='checkbox']:checked::before {
-  content: '✓';
-  width: inherit;
-  position: absolute;
-  height: inherit;
-  inset: 0;
-  text-align: center;
-  color: var(--primary-color);
-  transform: scale(1.2);
-}
-
-/* -- Title and date inputs (solid border variant) -- */
-#title-input,
-#date-input {
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-}
-
-/* -- Fieldset used for instruments and pieces -- */
-.entry-form fieldset,
-.note-checkbox {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  padding: 0.5rem 0;
-  border: none;
-}
-
-.entry-form legend {
-  float: left;
-  width: 100%;
-}
-
-.entry-form fieldset label,
-.note-checkbox label {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 10px;
-}
-
-.instruments-fieldset,
-.pieces-fieldset {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  gap: 15px;
-}
-
-/* -- Tag list inside the form -- */
-.entry-list-form {
-  list-style-type: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.entry-list-form select {
-  width: 10px;
-  border: none;
-}
-
-/* -- Submit button -- */
-.entry-form button[type='submit'] {
-  border: 1px solid var(--primary-color);
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  background-color: transparent;
-  color: var(--primary-color);
-}
-
-/* ============================================================
-   JOURNAL VIEW
-   3D book/page-flip layout for browsing entries
-   ============================================================ */
-
-.journal-view {
-  perspective: 80vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  position: relative;
-}
-
-/* Entry card inside the journal gets a note-paper texture */
-.journal-view .entry-card {
-  background-image: url('./note-paper.png');
-  background-size: cover;
-}
-
-/* -- Book and page structure -- */
-.book {
-  position: relative;
-  width: 40vw;
-  height: 60vh;
-  transform-style: preserve-3d;
-}
-
-/* Each page — must be absolute and full size to stack */
-.page {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transform-origin: left center;
-}
-
-/* Each face — also absolute and full size */
-.page-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  /* overflow-y: auto; */
-}
-
-/* Pre-rotated so it faces outward when the page flips */
-.page-front {
-  transform: rotateY(180deg);
-}
-
-.book-spine {
-  position: absolute;
-  top: 4%;
-  left: 0%;
-  height: 92%;
-  width: 2%;
-  background: var(--font-color);
-  transform: scale(1.1);
-  z-index: 1000;
-  pointer-events: none;
-}
-
-/* Entry card inside a page face */
-.page-face .entry-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  /* insert note bg here */
-  background-color: var(--primary-color);
-}
-
-/* -- Journal page controls (prev / next) -- */
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.ctrl-btn {
-  background: var(--font-color);
-  color: var(--primary-color);
-  border: 0.5px solid #ccc;
-  border-radius: 3px;
-  padding: 8px 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition:
-    background 0.15s,
-    transform 0.1s;
-}
-
-/* .ctrl-btn:hover {
-  background: #f0ede6;
-} */
-.ctrl-btn:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-
-.page-indicator {
-  font-size: 13px;
-  color: var(--primary-color);
-  min-width: 60px;
-  text-align: center;
-  font-family: sans-serif;
-}
-
-/* ============================================================
-   MILESTONE CARD
-   Milestone display cards and their controls
-   ============================================================ */
-
-.milestone-tag {
-  border: 1px solid var(--primary-color);
-  list-style-type: none;
-  display: flex;
-  /* flex-wrap: wrap; */
-  gap: 0.5rem;
-  padding: 4px;
-  border-radius: 3px;
-  width: fit-content;
-}
-
-.milestone-list,
-.note-list {
-  display: block;
-  min-width: 70vw;
-}
-
-.milestone-card,
-.note-card {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  border-radius: 8px;
-  padding: 1.5rem 2rem 1.5rem 2.5rem;
-  position: relative;
-  color: var(--primary-color);
-  height: auto;
-  margin-bottom: 0.5rem;
-}
-
-.milestone-card-header,
-.note-card-header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.milestone-card-controls button,
-.note-card-controls button {
-  background-color: transparent;
-  border: 1px solid var(--primary-color);
-  border-radius: 3px;
-}
-
-.milestone-controls button,
-.note-controls button {
-  padding: 0.4rem 1rem;
-  background-color: transparent;
-  border: 1px solid var(--primary-color);
-  border-radius: 3px;
-  color: var(--primary-color);
-  cursor: pointer;
-}
-
-/* ============================================================
-   MILESTONE FORM
-   Inline form inside a milestone card
-   ============================================================ */
-
-.milestone-card form,
-.note-card form {
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-
-.milestone-card input,
-.note-card input {
-  border: 1px solid var(--primary-color);
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 3px;
-  background-color: transparent;
-}
-
-/* ============================================================
    USER CONTROLS
-   Account/settings buttons
    ============================================================ */
 
 #user-controls {
@@ -834,18 +1477,74 @@ input[type='checkbox']:checked::before {
   font-size: 0.9rem;
 }
 
-/* 
-.delete-btn {
-  background: #dc2626;
-  color: white;
-  border: none;
-  padding: 0.3rem 0.6rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  flex-shrink: 0;
-} */
+/* ============================================================
+   DELETE DROPUP
+   ============================================================ */
 
+.delete-dropup {
+  position: relative;
+  display: inline-block;
+}
+
+.delete-trigger {
+  background-color: var(--font-color);
+  border: 1px solid var(--primary-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 3px;
+  position: relative;
+  height: 2.5rem;
+  width: 4rem;
+}
+
+.delete-trigger img {
+  position: absolute;
+  top: 19%;
+  left: 17%;
+}
+
+.dropup-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  border-radius: 0.75rem;
+  font-size: 18px;
+  font-weight: 500;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  white-space: nowrap;
+}
+
+.dropup-menu::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  bottom: -8px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  z-index: -1;
+}
+
+.dropup-item {
+  background: white;
+  text-align: center;
+  color: #b3261e;
+  border: none;
+  border-radius: 0.75rem;
+  font-family: serif;
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.dropup-item:hover {
+  background: #f3f3f3;
+}
 /* 
 @media (min-width: 480px) {
 } */

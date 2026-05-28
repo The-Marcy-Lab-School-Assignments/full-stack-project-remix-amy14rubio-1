@@ -1,12 +1,13 @@
 const bcrypt = require('bcrypt');
-const pool = require('../db/pool');
+const { pool } = require('../db/pool');
 
 const SALT_ROUNDS = 8;
 
 // Creates a new user. Returns { user_id, username } — never exposes password_hash.
 module.exports.create = async (username, password) => {
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-  const query = 'INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING user_id, username';
+  const query =
+    'INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING user_id, username';
   const { rows } = await pool.query(query, [username, passwordHash]);
   return rows[0];
 };
@@ -35,4 +36,26 @@ module.exports.validatePassword = async (username, password) => {
   const isValid = await bcrypt.compare(password, user.password_hash);
   if (!isValid) return null;
   return { user_id: user.user_id, username: user.username };
+};
+
+// Look up a user by their Google sub ID
+module.exports.findByGoogleId = async (googleId) => {
+  const query = 'SELECT user_id, username FROM users WHERE google_id = $1';
+  const { rows } = await pool.query(query, [googleId]);
+  return rows[0] || null;
+};
+
+// Create a Google-authed user — no real password needed
+module.exports.createGoogleUser = async (username, googleId) => {
+  const fakeHash = await bcrypt.hash(
+    require('crypto').randomBytes(32).toString('hex'),
+    SALT_ROUNDS,
+  );
+  const query = `
+    INSERT INTO users (username, password_hash, google_id)
+    VALUES ($1, $2, $3)
+    RETURNING user_id, username
+  `;
+  const { rows } = await pool.query(query, [username, fakeHash, googleId]);
+  return rows[0];
 };

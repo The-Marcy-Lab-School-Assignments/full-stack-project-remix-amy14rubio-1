@@ -10,12 +10,42 @@ import EntryDisplay from './EntryDisplay';
 import EntryEditForm from './EntryEditForm';
 
 const EntryCard = ({ entry, loadEntries, instruments, pieces, showControls }) => {
-  if (!entry) {
+  if (entry === 'front') {
+    return <div className='entry-card front-cover' />;
+  } else if (entry === 'back') {
+    return <div className='entry-card back-cover' />;
+  } else if (!entry) {
     return <div className='entry-card empty-card' />;
   }
   const [isEditing, setIsEditing] = useState(false);
-  const [currentInstruments, setCurrentInstruments] = useState(entry.instruments);
-  const [currentPieces, setCurrentPieces] = useState(entry.pieces);
+
+  const [selectedTags, setSelectedTags] = useState([
+    ...(entry.instruments || []).map((instrument) => ({
+      type: 'instrument',
+      id: instrument.instrument_id,
+      label: instrument.nickname || instrument.name,
+    })),
+
+    ...(entry.pieces || []).map((piece) => ({
+      type: 'piece',
+      id: piece.piece_id,
+      label: piece.title,
+    })),
+  ]);
+
+  const tagItems = [
+    ...(instruments || []).map((instrument) => ({
+      type: 'instrument',
+      id: instrument.instrument_id,
+      label: instrument.nickname || instrument.name,
+    })),
+
+    ...(pieces || []).map((piece) => ({
+      type: 'piece',
+      id: piece.piece_id,
+      label: piece.title,
+    })),
+  ];
 
   const [formData, setFormData] = useState({
     title: entry.title,
@@ -25,12 +55,6 @@ const EntryCard = ({ entry, loadEntries, instruments, pieces, showControls }) =>
     practice_minutes: entry.practice_minutes,
   });
 
-  const handleDelete = async () => {
-    const { error } = await deleteEntry(entry.entry_id);
-    if (error) return console.error(error);
-    await loadEntries();
-  };
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -39,8 +63,19 @@ const EntryCard = ({ entry, loadEntries, instruments, pieces, showControls }) =>
   };
 
   const handleCancel = () => {
-    setCurrentInstruments(entry.instruments);
-    setCurrentPieces(entry.pieces);
+    setSelectedTags([
+      ...entry.instruments.map((instrument) => ({
+        type: 'instrument',
+        id: instrument.instrument_id,
+        label: instrument.nickname || instrument.name,
+      })),
+
+      ...entry.pieces.map((piece) => ({
+        type: 'piece',
+        id: piece.piece_id,
+        label: piece.title,
+      })),
+    ]);
     setFormData({
       title: entry.title,
       body: entry.body,
@@ -65,13 +100,19 @@ const EntryCard = ({ entry, loadEntries, instruments, pieces, showControls }) =>
 
     if (error) return console.error(error);
 
-    const originalInstIds = entry.instruments.map((instrument) => instrument.instrument_id);
-    const currentInstIds = currentInstruments.map((instrument) => instrument.instrument_id);
-    const addedInstruments = currentInstIds.filter((id) => !originalInstIds.includes(id));
-    const removedInstruments = originalInstIds.filter((id) => !currentInstIds.includes(id));
+    const originalInstrumentIds = entry.instruments.map((instrument) => instrument.instrument_id);
+    const currentInstrumentIds = selectedTags
+      .filter((tag) => tag.type === 'instrument')
+      .map((tag) => tag.id);
+    const addedInstruments = currentInstrumentIds.filter(
+      (id) => !originalInstrumentIds.includes(id),
+    );
+    const removedInstruments = originalInstrumentIds.filter(
+      (id) => !currentInstrumentIds.includes(id),
+    );
 
     const originalPieceIds = entry.pieces.map((piece) => piece.piece_id);
-    const currentPieceIds = currentPieces.map((piece) => piece.piece_id);
+    const currentPieceIds = selectedTags.filter((tag) => tag.type === 'piece').map((tag) => tag.id);
     const addedPieces = currentPieceIds.filter((id) => !originalPieceIds.includes(id));
     const removedPieces = originalPieceIds.filter((id) => !currentPieceIds.includes(id));
 
@@ -97,15 +138,13 @@ const EntryCard = ({ entry, loadEntries, instruments, pieces, showControls }) =>
       handleUpdate={handleUpdate}
       onCancel={handleCancel}
       entry={entry}
-      instruments={instruments}
-      onInstrumentsChange={setCurrentInstruments}
-      pieces={pieces}
-      onPiecesChange={setCurrentPieces}
+      tagItems={tagItems}
+      selectedTags={selectedTags}
+      onTagsChange={setSelectedTags}
     />
   ) : (
     <EntryDisplay
       entry={entry}
-      onDelete={handleDelete}
       onEdit={() => setIsEditing(true)}
       loadEntries={loadEntries}
       showControls={showControls}

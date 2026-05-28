@@ -1,7 +1,10 @@
+require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const cookieSession = require('cookie-session');
-require('dotenv').config();
+const cors = require('cors');
+const multer = require('multer');
+const upload = multer();
 
 const logRoutes = require('./middleware/logRoutes');
 const checkAuthentication = require('./middleware/checkAuthentication');
@@ -25,6 +28,26 @@ const pathToFrontend = process.env.NODE_ENV === 'production' ? '../frontend/dist
 // Middleware
 // ====================================
 
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+);
+
+app.options(
+  '*',
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+);
+
+app.use((req, res, next) => {
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  next();
+});
+
 app.use(logRoutes);
 app.use(
   cookieSession({
@@ -41,6 +64,7 @@ app.use(express.static(path.join(__dirname, pathToFrontend)));
 // ====================================
 app.post('/api/auth/register', authControllers.register);
 app.post('/api/auth/login', authControllers.login);
+app.post('/api/auth/google', authControllers.googleLogin);
 app.get('/api/auth/me', authControllers.getMe);
 app.delete('/api/auth/logout', authControllers.logout);
 
@@ -97,10 +121,17 @@ app.delete(
 // Piece routes
 // ====================================
 app.get('/api/pieces', checkAuthentication, pieceControllers.listPieces);
+app.get('/api/pieces/link-preview', checkAuthentication, pieceControllers.getPieceLinkPreview);
 app.get('/api/pieces/:piece_id', checkAuthentication, pieceControllers.showPiece);
 app.post('/api/pieces', checkAuthentication, pieceControllers.createPiece);
 app.patch('/api/pieces/:piece_id', checkAuthentication, pieceControllers.updatePiece);
 app.delete('/api/pieces/:piece_id', checkAuthentication, pieceControllers.deletePiece);
+app.post(
+  '/api/pieces/:piece_id/upload',
+  checkAuthentication,
+  upload.single('file'),
+  pieceControllers.uploadFile,
+);
 
 // ====================================
 // Note routes

@@ -1,5 +1,4 @@
-import EntryInstrumentManager from './EntryInstrumentManager';
-import EntryPieceManager from './EntryPieceManager';
+import TagSelector from './TagSelector';
 
 const MOODS = ['😢', '😠', '😐', '😊', '😂'];
 
@@ -9,10 +8,9 @@ const EntryEditForm = ({
   handleUpdate,
   onCancel,
   entry,
-  instruments,
-  onInstrumentsChange,
-  pieces,
-  onPiecesChange,
+  tagItems,
+  selectedTags,
+  onTagsChange,
 }) => {
   return (
     <div className='entry-card'>
@@ -53,19 +51,7 @@ const EntryEditForm = ({
           </div>
         </div>
 
-        <EntryInstrumentManager
-          entryId={entry.entry_id}
-          entryInstruments={entry.instruments}
-          instruments={instruments}
-          onInstrumentsChange={onInstrumentsChange}
-        />
-
-        <EntryPieceManager
-          entryId={entry.entry_id}
-          entryPieces={entry.pieces}
-          pieces={pieces}
-          onPiecesChange={onPiecesChange}
-        />
+        <TagSelector items={tagItems} selectedItems={selectedTags} onChange={onTagsChange} />
 
         <div className='entry-controls'>
           <button type='submit'>Save</button>

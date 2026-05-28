@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 
-function LoginForm({ handleLogin }) {
+function LoginForm({ handleLogin, setCurrentUser }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
@@ -72,12 +74,31 @@ function RegisterForm({ handleRegister }) {
   );
 }
 
-function AuthPage({ handleLogin, handleRegister }) {
+function AuthPage({ handleLogin, handleRegister, setCurrentUser }) {
+  const [errorMessage, setErrorMessage] = useState(null);
+  const handleSuccess = async (response) => {
+    try {
+      const res = await axios.post(
+        '/api/auth/google',
+        {
+          token: response.credential,
+        },
+        { withCredentials: true },
+      );
+      setCurrentUser(res.data); // same end result as handleLogin, skip the password step
+    } catch (err) {
+      setErrorMessage('Google login failed. Please try again.');
+    }
+  };
   return (
     <div id='auth-section-container'>
       <div id='auth-section'>
-        <LoginForm handleLogin={handleLogin} />
+        <LoginForm handleLogin={handleLogin} setCurrentUser={setCurrentUser} />
         <RegisterForm handleRegister={handleRegister} />
+        <div>
+          {errorMessage && <p className='error'>{errorMessage}</p>}
+          <GoogleLogin onSuccess={handleSuccess} onError={() => console.log('Login Failed')} />
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-const pool = require('../db/pool');
+const { pool } = require('../db/pool');
 
 // Returns all instruments for a specific user, ordered by creation time
 module.exports.listByUser = async (user_id) => {

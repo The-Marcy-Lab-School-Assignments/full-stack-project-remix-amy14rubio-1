@@ -1,11 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 import AuthPage from './components/AuthPage';
 import EntryPage from './components/entry/EntryPage';
 import MilestonePage from './components/milestone/MilestonePage';
 import NotePage from './components/note/NotePage';
 import Home from './components/Home';
+import ProfilePage from './components/ProfilePage';
+import PiecePage from './components/pieces/PiecePage';
+import PieceDisplayPage from './components/pieces/PieceDisplayPage';
 
 import { getMe, login, register, logout } from './adapters/auth-adapters';
 import { fetchAllEntries } from './adapters/entry-adapters';
@@ -15,6 +19,8 @@ import { fetchAllMilestones } from './adapters/milestone-adapters';
 import { fetchAllNotes } from './adapters/note-adapters';
 
 import BodyClassController from './BodyClassController';
+
+axios.defaults.withCredentials = true;
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -87,20 +93,20 @@ function App() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    loadEntries();
-    loadInstruments();
-    loadPieces();
-    loadMilestones();
-    loadNotes();
-  }, []);
-
   // On every page load, check the server for an active session cookie.
   // React state doesn't survive a refresh; session cookies do.
   useEffect(() => {
     const checkForSession = async () => {
       const { data: user } = await getMe();
       setCurrentUser(user);
+      // Only fetch data if there's an active session
+      if (user) {
+        loadEntries();
+        loadInstruments();
+        loadPieces();
+        loadMilestones();
+        loadNotes();
+      }
     };
     checkForSession();
   }, []);
@@ -112,6 +118,11 @@ function App() {
     const { data: user, error } = await login(username, password);
     if (error) return error;
     setCurrentUser(user);
+    loadEntries();
+    loadInstruments();
+    loadPieces();
+    loadMilestones();
+    loadNotes();
   };
 
   const handleRegister = async (username, password) => {
@@ -123,6 +134,11 @@ function App() {
   const handleLogout = async () => {
     await logout();
     setCurrentUser(null);
+    setEntries([]);
+    setInstruments([]);
+    setPieces([]);
+    setMilestones([]);
+    setNotes([]);
   };
 
   return (
@@ -146,7 +162,11 @@ function App() {
                 showControls={false}
               />
             ) : (
-              <AuthPage handleLogin={handleLogin} handleRegister={handleRegister} />
+              <AuthPage
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+                setCurrentUser={setCurrentUser}
+              />
             )
           }
         />
@@ -165,7 +185,11 @@ function App() {
                 showControls={true}
               />
             ) : (
-              <AuthPage handleLogin={handleLogin} handleRegister={handleRegister} />
+              <AuthPage
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+                setCurrentUser={setCurrentUser}
+              />
             )
           }
         />
@@ -189,7 +213,6 @@ function App() {
             )
           }
         />
-
         <Route
           path='/notes'
           element={
@@ -204,7 +227,70 @@ function App() {
                 showControls={true}
               />
             ) : (
-              <AuthPage handleLogin={handleLogin} handleRegister={handleRegister} />
+              <AuthPage
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+                setCurrentUser={setCurrentUser}
+              />
+            )
+          }
+        />
+        <Route
+          path='/pieces'
+          element={
+            currentUser ? (
+              <PiecePage
+                currentUser={currentUser}
+                pieces={pieces}
+                loadPieces={loadPieces}
+                isLoading={isLoading}
+                error={error}
+                instruments={instruments}
+              />
+            ) : (
+              <AuthPage
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+                setCurrentUser={setCurrentUser}
+              />
+            )
+          }
+        />
+        <Route
+          path='/pieces/:pieceId'
+          element={
+            currentUser ? (
+              <PieceDisplayPage
+                pieces={pieces}
+                loadPieces={loadPieces}
+                entries={entries}
+                loadEntries={loadEntries}
+                instruments={instruments}
+              />
+            ) : (
+              <AuthPage
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+                setCurrentUser={setCurrentUser}
+              />
+            )
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            currentUser ? (
+              <ProfilePage
+                currentUser={currentUser}
+                handleLogout={handleLogout}
+                instruments={instruments}
+              />
+            ) : (
+              <AuthPage
+                handleLogin={handleLogin}
+                handleRegister={handleRegister}
+                setCurrentUser={setCurrentUser}
+              />
             )
           }
         />

@@ -8,6 +8,7 @@ const MilestoneList = ({
   pieces,
   showControls,
 }) => {
+  if (!milestones.length) return <p>No milestones yet.</p>;
   return (
     <ul className='milestone-list'>
       {milestones.map((milestone) => (

@@ -1,11 +1,30 @@
 import { useState } from 'react';
 import { createEntry } from '../../adapters/entry-adapters';
+import TagSelector from './TagSelector';
 
 const MOODS = ['😢', '😠', '😐', '😊', '😂'];
 
-const EntryForm = ({ loadEntries, instruments, pieces, handleForm }) => {
-  const [selectedInstrumentIds, setSelectedInstrumentIds] = useState([]);
-  const [selectedPieceIds, setSelectedPieceIds] = useState([]);
+const EntryForm = ({ loadEntries, instruments, pieces, handleCancel }) => {
+  const [selectedTags, setSelectedTags] = useState([]);
+  const tagItems = [
+    ...instruments.map((instrument) => ({
+      type: 'instrument',
+      id: instrument.instrument_id,
+      label: instrument.nickname || instrument.name,
+    })),
+
+    ...pieces.map((piece) => ({
+      type: 'piece',
+      id: piece.piece_id,
+      label: piece.title,
+    })),
+  ];
+
+  const selectedInstrumentIds = selectedTags
+    .filter((tag) => tag.type === 'instrument')
+    .map((tag) => tag.id);
+
+  const selectedPieceIds = selectedTags.filter((tag) => tag.type === 'piece').map((tag) => tag.id);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +32,7 @@ const EntryForm = ({ loadEntries, instruments, pieces, handleForm }) => {
     const title = form.elements.title.value;
     const body = form.elements.body.value;
     const mood = form.elements.mood.value;
-    const date = form.elements.date.value;
+    const date = new Date().toISOString().split('T')[0];
     const practiceMinutes = form.elements.practiceMinutes.value;
 
     const { error } = await createEntry(
@@ -29,48 +48,39 @@ const EntryForm = ({ loadEntries, instruments, pieces, handleForm }) => {
     if (error) return console.error(error);
 
     await loadEntries();
-
     form.reset();
-
-    handleForm();
-  };
-
-  const handleInstrumentToggle = (instrument_id) => {
-    setSelectedInstrumentIds((prev) =>
-      prev.includes(instrument_id)
-        ? prev.filter((id) => id !== instrument_id)
-        : [...prev, instrument_id],
-    );
-  };
-
-  const handlePieceToggle = (piece_id) => {
-    setSelectedPieceIds((prev) =>
-      prev.includes(piece_id) ? prev.filter((id) => id !== piece_id) : [...prev, piece_id],
-    );
+    handleCancel();
   };
 
   return (
     <form onSubmit={handleSubmit} className='entry-form'>
-      <h2>New Entry</h2>
+      <label htmlFor='title-input' style={{ display: 'none' }}>
+        Title
+      </label>
+      <input id='title-input' name='title' type='text' placeholder='New Entry' required />
 
-      <label htmlFor='title-input'>Title</label>
-      <input id='title-input' name='title' type='text' required />
-
-      <label htmlFor='date-input'>Date</label>
-      <input id='date-input' name='date' type='date' required />
-
-      <label htmlFor='body-input'>Entry</label>
+      <label htmlFor='body-input' style={{ display: 'none' }}>
+        Entry body
+      </label>
       <textarea id='body-input' name='body' rows={4} placeholder='Write your entry here...' />
-
+      <div className='tag-group'>
+        <label htmlFor='tags-input'>Tags:</label>
+        <TagSelector items={tagItems} selectedItems={selectedTags} onChange={setSelectedTags} />
+      </div>
       <div className='form-group'>
         <div>
-          <label htmlFor='practiceMinutes-input'>Practice minutes</label>
-          <input id='practiceMinutes-input' name='practiceMinutes' type='number' />
+          <label htmlFor='practiceMinutes-input' placeholder='10 mins' style={{ display: 'none' }}>
+            Practice minutes
+          </label>
+          <p>Practiced for</p>
+          <input id='practiceMinutes-input' name='practiceMinutes' type='number' placeholder='10' />
         </div>
         <div>
-          <label htmlFor='mood-select'>Mood</label>
+          <label htmlFor='mood-select' style={{ display: 'none' }}>
+            Mood
+          </label>
+          <p>minutes and felt</p>
           <select id='mood-select' name='mood'>
-            <option value=''>-- select --</option>
             {MOODS.map((emoji, i) => (
               <option key={i} value={i + 1}>
                 {emoji}
@@ -79,41 +89,6 @@ const EntryForm = ({ loadEntries, instruments, pieces, handleForm }) => {
           </select>
         </div>
       </div>
-
-      <div className='form-group'>
-        <fieldset>
-          <legend>Instruments practiced</legend>
-          <div className='instruments-fieldset'>
-            {instruments.map((instrument) => (
-              <label key={instrument.instrument_id}>
-                <input
-                  type='checkbox'
-                  checked={selectedInstrumentIds.includes(instrument.instrument_id)}
-                  onChange={() => handleInstrumentToggle(instrument.instrument_id)}
-                />
-                {instrument.nickname || instrument.name}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-
-        <fieldset>
-          <legend>Pieces practiced</legend>
-          <div className='pieces-fieldset'>
-            {pieces.map((piece) => (
-              <label key={piece.piece_id}>
-                <input
-                  type='checkbox'
-                  checked={selectedPieceIds.includes(piece.piece_id)}
-                  onChange={() => handlePieceToggle(piece.piece_id)}
-                />
-                {piece.title}
-              </label>
-            ))}
-          </div>
-        </fieldset>
-      </div>
-
       <button type='submit'>Save</button>
     </form>
   );

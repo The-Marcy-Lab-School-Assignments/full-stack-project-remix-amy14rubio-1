@@ -1,4 +1,4 @@
-const pool = require('../db/pool');
+const { pool } = require('../db/pool');
 
 // Returns a single entry row (used for ownership checks before update/delete)
 module.exports.find = async (entry_id) => {

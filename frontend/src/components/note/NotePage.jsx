@@ -6,28 +6,39 @@ import Navbar from '../Navbar';
 
 function NotePage({ currentUser, instruments, notes, loadNotes, isLoading, error, showControls }) {
   const [formReveal, setFormReveal] = useState(false);
-  const handleForm = () => {
-    setFormReveal((prev) => !prev);
+  const handleCreate = () => {
+    setFormReveal(true);
+  };
+  const handleCancel = () => {
+    setFormReveal(false);
   };
   return (
     <main>
       <Navbar />
       <section>
-        <div className='milestone-container'>
-          {formReveal && (
-            <NoteForm instruments={instruments} loadNotes={loadNotes} handleForm={handleForm} />
-          )}
-          <button
-            onClick={handleForm}
-            className={`create-milestone ${formReveal ? 'cancel-milestone' : ''}`}
-          >
-            {formReveal ? 'x' : 'Create Note'}
-          </button>
-        </div>
+        {!formReveal && (
+          <div className='milestone-header'>
+            <h1>NOTES</h1>
+            <div>
+              <button onClick={handleCreate} className={`create-entry`}>
+                +
+              </button>
+            </div>
+          </div>
+        )}
+        {formReveal && (
+          <div className='milestone-container'>
+            <NoteForm instruments={instruments} loadNotes={loadNotes} handleCancel={handleCancel} />
+
+            <button onClick={handleCancel} className={`cancel-entry`}>
+              x
+            </button>
+          </div>
+        )}
         {isLoading && <p>Loading notes...</p>}
         {error && <p className='error'>Something went wrong: {error}</p>}
         {!formReveal && (
-          <div>
+          <div className='note-list-container'>
             <NoteList
               notes={notes}
               loadNotes={loadNotes}

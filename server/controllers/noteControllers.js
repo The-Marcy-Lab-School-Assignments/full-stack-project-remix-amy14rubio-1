@@ -11,9 +11,9 @@ module.exports.listNotes = async (req, res, next) => {
 
 module.exports.createNote = async (req, res, next) => {
   try {
-    const { title, body, instrument_id, is_pinned } = req.body;
+    const { title, body, instrument_id, pinned } = req.body;
     if (!title) return res.status(400).send({ error: 'Title is required.' });
-    const note = await noteModel.create(req.session.user_id, instrument_id, title, body, is_pinned);
+    const note = await noteModel.create(req.session.user_id, instrument_id, title, body, pinned);
     res.status(201).send(note);
   } catch (err) {
     next(err);

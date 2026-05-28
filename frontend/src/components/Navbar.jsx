@@ -2,6 +2,10 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
+// change navbar, re-organize for adding the social media aspect of the app
+//probably 2 modes, one for inspo and the other for documentation
+//both inspo and documentation should have a home page
+
 const Navbar = () => {
   const location = useLocation();
   return (
@@ -34,15 +38,17 @@ const Navbar = () => {
         </li>
         <li>
           <NavLink className='nav-link' to='/pieces'>
-            Songs
+            Pieces
           </NavLink>
         </li>
         <li className='profile'>
-          {/* redirect to new page?? */}
-          <a href='/profile' className='user-icon' className='nav-link'>
-            {/* <NavLink to='/pieces'>Profile</NavLink> */}
+          {/* is redirecting to a new page better?? */}
+          {/* <a href='/profile' className='user-icon' className='nav-link'>
             <i>account</i>
-          </a>
+          </a> */}
+          <NavLink className='nav-link' to='/profile'>
+            profile
+          </NavLink>
         </li>
       </ul>
     </nav>

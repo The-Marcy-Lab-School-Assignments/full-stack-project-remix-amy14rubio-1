@@ -15,31 +15,41 @@ function MilestonePage({
   showControls,
 }) {
   const [formReveal, setFormReveal] = useState(false);
-  const handleForm = () => {
-    setFormReveal((prev) => !prev);
+  const handleCreate = () => {
+    setFormReveal(true);
+  };
+  const handleCancel = () => {
+    setFormReveal(false);
   };
   return (
     <main>
       <Navbar />
       <section>
-        <div className='milestone-container'>
-          {formReveal && (
+        {!formReveal && (
+          <div className='milestone-header'>
+            <h1>MILESTONES</h1>
+            <div>
+              <button onClick={handleCreate} className={`create-entry`}>
+                +
+              </button>
+            </div>
+          </div>
+        )}
+        {formReveal && (
+          <div className='milestone-container'>
             <MilestoneForm
               milestones={milestones}
               loadMilestones={loadMilestones}
               entries={entries}
               instruments={instruments}
               pieces={pieces}
-              handleForm={handleForm}
+              handleCancel={handleCancel}
             />
-          )}
-          <button
-            onClick={handleForm}
-            className={`create-milestone ${formReveal ? 'cancel-milestone' : ''}`}
-          >
-            {formReveal ? 'x' : 'Create Milestone'}
-          </button>
-        </div>
+            <button onClick={handleCancel} className={`cancel-entry`}>
+              x
+            </button>
+          </div>
+        )}
         {isLoading && <p>Loading milestones...</p>}
         {error && <p className='error'>Something went wrong: {error}</p>}
         {!formReveal && (

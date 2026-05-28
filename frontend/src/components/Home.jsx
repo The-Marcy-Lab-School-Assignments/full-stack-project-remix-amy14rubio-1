@@ -19,43 +19,52 @@ function Home({
     <main>
       <Navbar />
       <section>
-        <div id='user-controls'>
+        <div id='home-header'>
           <h1 className='home-title'>
-            Welcome, {currentUser.username[0].toUpperCase() + currentUser.username.slice(1)}!
+            {'Welcome '.toUpperCase()}
+            {currentUser.username.toUpperCase()}
           </h1>
-          <button onClick={handleLogout}>Log Out</button>
+          <h2>
+            {/* maybe have user at initialization specify if they have any goals, like practicing 10mins - 30mins per day */}
+            {/* if user accomplished their daily goal for 'yesterday', then they should see their minutes practiced to give a sense of celebration */}
+            {/* a month is too long and the message shouldn't be rare but it also shouldn't be too common */}
+            Congrats You Practiced{' '}
+            {entries.reduce((sum, entry) => sum + entry.practice_minutes, 0) || 0} Minutes Total
+          </h2>
         </div>
-        {/* add total practice minutes */}
-        {/* add recent entries */}
-        <h2>{'Recent Entries'.toUpperCase()}</h2>
-
-        <EntryList
-          entries={[...entries].reverse().slice(0, 3)}
-          loadEntries={loadEntries}
-          instruments={instruments}
-        />
-
-        {/* add recent milestones */}
-        <h2>{'Recent Milestones'.toUpperCase()} </h2>
-        <MilestoneList
-          milestones={[...milestones].reverse().slice(0, 3)}
-          loadMilestones={loadMilestones}
-          entries={entries}
-          instruments={instruments}
-        />
-
-        {/* add recent notes */}
-        <h2>{'Pinned Notes'.toUpperCase()} </h2>
-        <NoteList
-          notes={notes.filter((note) => note.pinned)}
-          loadNotes={loadNotes}
-          instruments={instruments}
-        />
-
-        {/* <EntryForm loadEntries={loadEntries} instruments={instruments} />
-      {isLoading && <p>Loading entries...</p>}
-      {error && <p className='error'>Something went wrong: {error}</p>}
-      <EntryList entries={entries} loadEntries={loadEntries} instruments={instruments} /> */}
+        <div className='home-layout'>
+          <div className='home-entries'>
+            <h2>{'Recent Entries'.toUpperCase()}</h2>
+            <div className='table'>
+              <EntryList
+                entries={[...entries].reverse().slice(0, 10)}
+                loadEntries={loadEntries}
+                instruments={instruments}
+              />
+            </div>
+          </div>
+          <div className='home-milestones'>
+            <h2>{'Recent Milestones'.toUpperCase()} </h2>
+            <div className='corkboard'>
+              <MilestoneList
+                milestones={[...milestones].reverse().slice(0, 3)}
+                loadMilestones={loadMilestones}
+                entries={entries}
+                instruments={instruments}
+              />
+            </div>
+          </div>
+          <div className='home-notes'>
+            <h2>{'Pinned Notes'.toUpperCase()} </h2>
+            <div className='home-note-container'>
+              <NoteList
+                notes={notes.filter((note) => note.pinned)}
+                loadNotes={loadNotes}
+                instruments={instruments}
+              />
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );
