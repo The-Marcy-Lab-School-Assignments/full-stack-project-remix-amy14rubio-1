@@ -731,7 +731,6 @@ input[type='checkbox']:checked::before {
 }
 
 .journal-view .entry-card {
-  background-image: url('./entry-paper.png');
   background-size: cover;
   box-shadow: 0 5px 5px rgba(171, 171, 171, 0.1);
 }
@@ -781,6 +780,7 @@ input[type='checkbox']:checked::before {
   flex-direction: column;
   padding: 2rem 4rem;
   gap: 15px;
+  background-image: url('./entry-paper.png');
   background-color: var(--primary-color);
 }
 

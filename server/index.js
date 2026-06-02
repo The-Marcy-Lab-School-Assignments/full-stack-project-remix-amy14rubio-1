@@ -30,7 +30,10 @@ const pathToFrontend = process.env.NODE_ENV === 'production' ? '../frontend/dist
 
 app.use(
   cors({
-    origin: 'http://localhost:5173',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://full-stack-project-remix-amy14rubio-1.onrender.com'
+        : 'http://localhost:5173',
     credentials: true,
   }),
 );
@@ -38,7 +41,10 @@ app.use(
 app.options(
   '*',
   cors({
-    origin: 'http://localhost:5173',
+    origin:
+      process.env.NODE_ENV === 'production'
+        ? 'https://full-stack-project-remix-amy14rubio-1.onrender.com'
+        : 'http://localhost:5173',
     credentials: true,
   }),
 );

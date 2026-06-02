@@ -9,7 +9,9 @@ const { createClient } = require('@supabase/supabase-js');
 // environment automatically — no explicit config needed for local development.
 // In production, PG_CONNECTION_STRING overrides all of them.
 module.exports.pool = new Pool(
-  process.env.PG_CONNECTION_STRING ? { connectionString: process.env.PG_CONNECTION_STRING } : {},
+  process.env.PG_CONNECTION_STRING
+    ? { connectionString: process.env.PG_CONNECTION_STRING, ssl: { rejectUnauthorized: false } }
+    : {},
 );
 
 module.exports.supabase = createClient(
