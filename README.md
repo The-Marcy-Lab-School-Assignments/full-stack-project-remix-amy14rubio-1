@@ -1,14 +1,39 @@
 # Music Journal App
 
-A full-stack music journaling app built with React, Express, and Postgres. Built for musicians who want to track practice sessions, organize their music, and share their journey with a supportive community. Demonstrates session-based authentication, session rehydration, auth-dependent data fetching, and conditional rendering.
+![App Screenshot](https://github.com/user-attachments/assets/e7febc2e-7949-4790-aaa9-afe436d40519)
 
-This project prioritizes core music journaling features (entries, instruments, notes, milestones, and pieces), with social features (posts, comments, feed interactions) included as extended scope.
+A full-stack music journaling app built for musicians who want to track practice sessions, organize their music library, and celebrate their progress. Demonstrates session-based authentication, Google OAuth sign-in, file uploads via Supabase, and auth-dependent data fetching with conditional rendering.
+
+## Live App
+
+[https://full-stack-project-remix-amy14rubio-1.onrender.com](https://full-stack-project-remix-amy14rubio-1.onrender.com)
+
+## Demo
+
+[Watch the demo video](https://youtu.be/Tjt-DwteKbI?si=U4tiom62R1zXbrFe)
+
+---
+
+## Tech Stack
+
+| Layer         | Technology                                          |
+| ------------- | --------------------------------------------------- |
+| Frontend      | React 18, React Router DOM, Framer Motion           |
+| Build Tool    | Vite                                                |
+| Backend       | Node.js, Express                                    |
+| Database      | PostgreSQL                                          |
+| File Storage  | Supabase                                            |
+| Auth          | Cookie sessions (bcrypt), Google OAuth 2.0          |
+| Link Metadata | Cheerio (scrapes titles/thumbnails from piece URLs) |
+
+---
 
 ## User Stories
 
 **Auth**
 
 - A user can register for an account with a username and password
+- A user can sign in with Google OAuth
 - A user can log in to an existing account
 - A user can log out
 - A returning user who has an active session is automatically logged in when they revisit the app
@@ -16,26 +41,11 @@ This project prioritizes core music journaling features (entries, instruments, n
 **Entries**
 
 - A logged-in user can see all of their journal entries
-- A logged-in user can create a new entry by entering a title, body, mood, date and practice minutes
+- A logged-in user can create a new entry by entering a title, body, mood, date, and practice minutes
 - A logged-in user can register an entry with one or more of their instruments
 - A logged-in user can link one or more pieces to an entry
 - A logged-in user can edit an entry
 - A logged-in user can delete an entry
-
-**Posts**
-Posts may either be standalone community posts or published journal entries.
-
-- A user can view all posts on the public feed
-- A logged-in user can publish an entry to the public feed
-- A logged-in user can create a standalone post in the public feed
-- A logged-in user can mark a post as seeking advice
-- A logged-in user can add a recording link to a post
-- A logged-in user can remove a recording link from one of their posts
-- A logged-in user can filter the public feed by tag
-- A logged-in user can save a post from the public feed
-- A logged-in user can view all of their saved posts
-- A logged-in user can delete one of their own posts
-- A logged-in user can edit one of their own posts
 
 **Instruments**
 
@@ -45,21 +55,14 @@ Posts may either be standalone community posts or published journal entries.
 - A logged-in user can edit their instruments
 - A logged-in user can delete an instrument from their profile
 
-**Tags**
-
-- A logged-in user can view all available tags
-- A logged-in user can add one or more tags to a post
-- A post must have at least one tag before it can be published to the
-  public feed
-
 **Pieces**
 
-- A logged-in user can add a piece to their library with a title, composer,
-  and instrument
-- A logged-in user can upload a URL to a piece
-- A logged-in user can update the status of a piece
-  (learning, polishing, performance ready, archived)
-- A logged-in user can view all of their pieces, organized by instrument
+- A logged-in user can add a piece to their library with a title, composer, and instrument
+- A logged-in user can upload a recording URL or PDF link to a piece
+- A logged-in user can upload an image for a piece (stored via Supabase)
+- A logged-in user can update the status of a piece (learning, polishing, performance ready, archived)
+- A logged-in user can view all of their pieces organized by instrument
+- A logged-in user can view a detail page for a single piece
 - A logged-in user can delete a piece from their library
 
 **Notes**
@@ -78,12 +81,45 @@ Posts may either be standalone community posts or published journal entries.
 - A logged-in user can view all of their milestones
 - A logged-in user can delete a milestone
 
+---
+
+## Stretch Features
+
+The following features are planned but not yet integrated.
+
+**Posts**
+
+Posts may either be standalone community posts or published journal entries.
+
+- A user can view all posts on the public feed
+- A logged-in user can publish an entry to the public feed
+- A logged-in user can create a standalone post in the public feed
+- A logged-in user can mark a post as seeking advice
+- A logged-in user can add a recording link to a post
+- A logged-in user can remove a recording link from one of their posts
+- A logged-in user can delete one of their own posts
+- A logged-in user can edit one of their own posts
+
+**Tags**
+
+- A logged-in user can view all available tags
+- A logged-in user can add one or more tags to a post
+- A logged-in user can filter the public feed by tag
+- A post must have at least one tag before it can be published to the public feed
+
+**Saved Posts**
+
+- A logged-in user can save a post from the public feed
+- A logged-in user can view all of their saved posts
+
 **Comments**
 
 - A logged-in user can comment on a post in the public feed
 - A logged-in user can view all comments on a post
 - A logged-in user can edit their own comments on a post
 - A logged-in user can delete one of their own comments
+
+---
 
 ## Schema
 
@@ -94,6 +130,7 @@ user_id           SERIAL PRIMARY KEY
 username          TEXT UNIQUE NOT NULL
 display_name      TEXT
 password_hash     TEXT NOT NULL
+google_id         TEXT UNIQUE
 bio               TEXT
 created_at        TIMESTAMP DEFAULT NOW()
 
@@ -104,14 +141,7 @@ instrument_id  SERIAL PRIMARY KEY
 user_id        INTEGER REFERENCES users(user_id) ON DELETE CASCADE
 name           TEXT NOT NULL
 type           TEXT
-nickname	     TEXT
-
-
-tags
-─────────────────────────────────────────
-tag_id        SERIAL PRIMARY KEY
-name          TEXT UNIQUE NOT NULL
-created_at     TIMESTAMP DEFAULT NOW()
+nickname       TEXT
 
 
 pieces
@@ -122,7 +152,10 @@ instrument_id   INTEGER REFERENCES instruments(instrument_id) ON DELETE SET NULL
 title           TEXT NOT NULL
 composer        TEXT
 status          TEXT CHECK (status IN ('learning','polishing','performance_ready','archived'))
-url      		    TEXT
+url             TEXT
+recording_url   TEXT
+pdf_url         TEXT
+image_url       TEXT
 added_at        TIMESTAMP DEFAULT NOW()
 
 
@@ -177,6 +210,17 @@ entry_piece_id      SERIAL PRIMARY KEY
 entry_id  INTEGER REFERENCES entries(entry_id) ON DELETE CASCADE
 piece_id  INTEGER REFERENCES pieces(piece_id) ON DELETE CASCADE
 UNIQUE (entry_id, piece_id)
+```
+
+<details>
+<summary>Stretch schema (posts, tags, comments, saved posts)</summary>
+
+```
+tags
+─────────────────────────────────────────
+tag_id        SERIAL PRIMARY KEY
+name          TEXT UNIQUE NOT NULL
+created_at    TIMESTAMP DEFAULT NOW()
 
 
 posts
@@ -193,8 +237,8 @@ updated_at        TIMESTAMP DEFAULT NOW()
 post_tags
 ─────────────────────────────────────────
 post_tag_id      SERIAL PRIMARY KEY
-post_id	    INTEGER REFERENCES posts(post_id) ON DELETE CASCADE
-tag_id		    INTEGER REFERENCES tags(tag_id) ON DELETE CASCADE
+post_id          INTEGER REFERENCES posts(post_id) ON DELETE CASCADE
+tag_id           INTEGER REFERENCES tags(tag_id) ON DELETE CASCADE
 UNIQUE (post_id, tag_id)
 
 
@@ -227,6 +271,10 @@ saved_at    TIMESTAMP DEFAULT NOW()
 UNIQUE (user_id, post_id)
 ```
 
+</details>
+
+---
+
 ## API Contract
 
 Unless otherwise noted, all endpoints require authentication.
@@ -237,6 +285,7 @@ Unless otherwise noted, all endpoints require authentication.
 | ------ | -------------------- | ------------------------ | --------------------------------- |
 | POST   | `/api/auth/register` | `{ username, password }` | `{ user_id, username }`           |
 | POST   | `/api/auth/login`    | `{ username, password }` | `{ user_id, username }`           |
+| POST   | `/api/auth/google`   | `{ credential }`         | `{ user_id, username }`           |
 | DELETE | `/api/auth/logout`   | —                        | `{ message }`                     |
 | GET    | `/api/auth/me`       | —                        | `{ user_id, username }` or `null` |
 
@@ -273,56 +322,60 @@ Unless otherwise noted, all endpoints require authentication.
 | PATCH  | `/api/instruments/:instrument_id` | `{ name, type, nickname }` | `{ instrument_id, name, type, nickname }`   |
 | DELETE | `/api/instruments/:instrument_id` | —                          | `{ message }`                               |
 
-### Tag endpoints
-
-| Method | Endpoint            | Request Body | Response             |
-| ------ | ------------------- | ------------ | -------------------- |
-| GET    | `/api/tags`         | —            | `[{ tag_id, name }]` |
-| POST   | `/api/tags`         | { name }     | `{ tag_id, name }`   |
-| DELETE | `/api/tags/:tag_id` | —            | `{ message }`        |
-
 ### Piece endpoints
 
-| Method | Endpoint                | Request Body                                      | Response                                                              |
-| ------ | ----------------------- | ------------------------------------------------- | --------------------------------------------------------------------- |
-| GET    | `/api/pieces`           | —                                                 | `[{ piece_id, title, composer, status, url, instrument_id }]`         |
-| GET    | `/api/pieces/:piece_id` | —                                                 | `{ piece_id, title, composer, status, url, instrument_id, added_at }` |
-| POST   | `/api/pieces`           | `{ title, composer, status, url, instrument_id }` | `{ piece_id, title, composer, status, url, instrument_id, added_at }` |
-| PATCH  | `/api/pieces/:piece_id` | `{ title, composer, status, url, instrument_id }` | `{ piece_id, title, composer, status, url, instrument_id }`           |
-| DELETE | `/api/pieces/:piece_id` | —                                                 | `{ message }`                                                         |
+| Method | Endpoint                       | Request Body                                      | Response                                                                        |
+| ------ | ------------------------------ | ------------------------------------------------- | ------------------------------------------------------------------------------- |
+| GET    | `/api/pieces`                  | —                                                 | `[{ piece_id, title, composer, status, url, instrument_id }]`                   |
+| GET    | `/api/pieces/:piece_id`        | —                                                 | `{ piece_id, title, composer, status, url, recording_url, pdf_url, image_url }` |
+| POST   | `/api/pieces`                  | `{ title, composer, status, url, instrument_id }` | `{ piece_id, title, composer, status, url, instrument_id, added_at }`           |
+| PATCH  | `/api/pieces/:piece_id`        | `{ title, composer, status, url, instrument_id }` | `{ piece_id, title, composer, status, url, instrument_id }`                     |
+| POST   | `/api/pieces/:piece_id/upload` | `multipart/form-data` with file                   | `{ image_url }` (Supabase public URL)                                           |
+| DELETE | `/api/pieces/:piece_id`        | —                                                 | `{ message }`                                                                   |
 
 ### Note endpoints
 
-| Method | Endpoint              | Request Body                     | Response                                                     |
-| ------ | --------------------- | -------------------------------- | ------------------------------------------------------------ |
-| GET    | `/api/notes`          | —                                | `[{ note_id, title, body, pinned, instrument_id }]`          |
-| POST   | `/api/notes`          | `{ title, body, instrument_id }` | `{ note_id, title, body, pinned, instrument_id, created_at}` |
-| PATCH  | `/api/notes/:note_id` | `{ title, body, pinned }`        | `{ note_id, title, body, pinned, instrument_id }`            |
-| DELETE | `/api/notes/:note_id` | —                                | `{ message }`                                                |
+| Method | Endpoint              | Request Body                     | Response                                                      |
+| ------ | --------------------- | -------------------------------- | ------------------------------------------------------------- |
+| GET    | `/api/notes`          | —                                | `[{ note_id, title, body, pinned, instrument_id }]`           |
+| POST   | `/api/notes`          | `{ title, body, instrument_id }` | `{ note_id, title, body, pinned, instrument_id, created_at }` |
+| PATCH  | `/api/notes/:note_id` | `{ title, body, pinned }`        | `{ note_id, title, body, pinned, instrument_id }`             |
+| DELETE | `/api/notes/:note_id` | —                                | `{ message }`                                                 |
 
 ### Milestone endpoints
 
-| Method | Endpoint                        | Request Body                                        | Response                                                                       |
-| ------ | ------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------ |
-| GET    | `/api/milestones`               | —                                                   | `[{ milestone_id, title, date, instrument_id, entry_id, piece_id }]`           |
-| POST   | `/api/milestones`               | `{ title, date, instrument_id, entry_id, piece_id}` | `{ milestone_id, title, date, instrument_id, entry_id, piece_id, created_at }` |
-| PATCH  | `/api/milestones/:milestone_id` | `{ title }`                                         | `{ milestone_id, title, date, instrument_id, entry_id, piece_id }`             |
-| DELETE | `/api/milestones/:milestone_id` | —                                                   | `{ message }`                                                                  |
+| Method | Endpoint                        | Request Body                                         | Response                                                                       |
+| ------ | ------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------ |
+| GET    | `/api/milestones`               | —                                                    | `[{ milestone_id, title, date, instrument_id, entry_id, piece_id }]`           |
+| POST   | `/api/milestones`               | `{ title, date, instrument_id, entry_id, piece_id }` | `{ milestone_id, title, date, instrument_id, entry_id, piece_id, created_at }` |
+| PATCH  | `/api/milestones/:milestone_id` | `{ title }`                                          | `{ milestone_id, title, date, instrument_id, entry_id, piece_id }`             |
+| DELETE | `/api/milestones/:milestone_id` | —                                                    | `{ message }`                                                                  |
 
-### Post endpoints (does not require authentication)
+<details>
+<summary>Stretch endpoints (posts, tags, comments, saved posts)</summary>
+
+### Post endpoints (no auth required)
 
 | Method | Endpoint              | Request Body | Response                                                                                                                     |
 | ------ | --------------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | GET    | `/api/posts`          | —            | `[{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[] }]`           |
 | GET    | `/api/posts/:post_id` | —            | `{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[], comments[] }` |
 
-### Post endpoints
+### Post endpoints (auth required)
 
 | Method | Endpoint              | Request Body                                       | Response                                                                                                         |
 | ------ | --------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | POST   | `/api/posts`          | `{ body, entry_id, is_seeking_advice, tag_ids[] }` | `{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[] }` |
 | PATCH  | `/api/posts/:post_id` | `{ body, is_seeking_advice, tag_ids[] }`           | `{ post_id, user_id, username, display_name, entry_id, body, is_seeking_advice, posted_at, updated_at, tags[] }` |
 | DELETE | `/api/posts/:post_id` | —                                                  | `{ message }`                                                                                                    |
+
+### Tag endpoints
+
+| Method | Endpoint            | Request Body | Response             |
+| ------ | ------------------- | ------------ | -------------------- |
+| GET    | `/api/tags`         | —            | `[{ tag_id, name }]` |
+| POST   | `/api/tags`         | `{ name }`   | `{ tag_id, name }`   |
+| DELETE | `/api/tags/:tag_id` | —            | `{ message }`        |
 
 ### Post tag endpoints
 
@@ -356,14 +409,18 @@ Unless otherwise noted, all endpoints require authentication.
 | PATCH  | `/api/posts/:post_id/comments/:comment_id` | `{ body }`   | `{ comment_id, post_id, user_id, username, display_name, body, created_at, updated_at }` |
 | DELETE | `/api/posts/:post_id/comments/:comment_id` | —            | `{ message }`                                                                            |
 
+</details>
+
+---
+
 ## Setup
 
 ### 1. Database
 
-Create a local Postgres database:
+Create a local Postgres database (use the name that matches your `.env`):
 
 ```sh
-createdb todos_casestudy
+createdb music_journal
 ```
 
 ### 2. Server
@@ -374,7 +431,7 @@ npm install
 cp .env.template .env
 ```
 
-Open `.env` and fill in your Postgres credentials and a session secret. Then seed the database:
+Open `.env` and fill in your Postgres credentials, session secret, Google OAuth client ID, and Supabase keys. Then seed the database:
 
 ```sh
 npm run db:seed
@@ -400,6 +457,8 @@ npm run dev
 
 The frontend runs on `http://localhost:5173`. The Vite dev proxy forwards all `/api` requests to the Express server so session cookies work correctly.
 
+---
+
 ## Seed Users
 
 After running `npm run db:seed`, these accounts are available:
@@ -409,35 +468,89 @@ After running `npm run db:seed`, these accounts are available:
 | alice    | password123 |
 | bob      | password123 |
 
+---
+
 ## Application Structure
 
 ```
-swe-casestudy-7-todo-app/
-├── frontend/               # React app (Vite)
+music-journal/
+├── frontend/                   # React app (Vite)
 │   ├── src/
-│   │   ├── App.jsx         # Root component: currentUser state, session rehydration, auth handlers
+│   │   ├── App.jsx             # Root component: currentUser state, session rehydration, auth handlers, routing
+│   │   ├── BodyClassController.jsx
 │   │   ├── adapters/
-│   │   │   ├── auth-adapters.js  # Fetch adapters for /api/auth/* endpoints
-│   │   │   └── todo-adapters.js  # Fetch adapters for /api/todos/* endpoints
+│   │   │   ├── auth-adapters.js
+│   │   │   ├── entry-adapters.js
+│   │   │   ├── entryInstrument-adapters.js
+│   │   │   ├── entryPiece-adapters.js
+│   │   │   ├── instrument-adapters.js
+│   │   │   ├── milestone-adapters.js
+│   │   │   ├── note-adapters.js
+│   │   │   ├── piece-adapters.js
+│   │   │   └── handleFetch.js
 │   │   └── components/
-│   │       ├── AuthPage.jsx    # Login + Register forms (shown when logged out)
-│   │       ├── TodoPage.jsx    # Main app container (shown when logged in)
-│   │       ├── AddTodoForm.jsx # Form to create a new todo
-│   │       ├── TodoList.jsx    # Renders a list of TodoItems
-│   │       └── TodoItem.jsx    # Single todo: checkbox, title, delete button
-│   └── vite.config.js      # Proxies /api requests to Express in development
-└── server/                 # Express + Postgres API
-    ├── index.js            # App entry point, route definitions
+│   │       ├── AuthPage.jsx
+│   │       ├── Home.jsx
+│   │       ├── Navbar.jsx
+│   │       ├── ProfilePage.jsx
+│   │       ├── entry/
+│   │       │   ├── EntryPage.jsx
+│   │       │   ├── EntryForm.jsx
+│   │       │   ├── EntryList.jsx
+│   │       │   ├── EntryCard.jsx
+│   │       │   ├── EntryDisplay.jsx
+│   │       │   ├── EntryEditForm.jsx
+│   │       │   └── EntryInstrumentManager.jsx
+│   │       ├── instrument/
+│   │       │   ├── InstrumentPage.jsx
+│   │       │   ├── InstrumentForm.jsx
+│   │       │   ├── InstrumentList.jsx
+│   │       │   └── InstrumentCard.jsx
+│   │       ├── milestone/
+│   │       │   ├── MilestonePage.jsx
+│   │       │   ├── MilestoneForm.jsx
+│   │       │   ├── MilestoneList.jsx
+│   │       │   ├── MilestoneCard.jsx
+│   │       │   ├── MilestoneDisplay.jsx
+│   │       │   └── MilestoneEditForm.jsx
+│   │       ├── note/
+│   │       │   ├── NotePage.jsx
+│   │       │   ├── NoteForm.jsx
+│   │       │   ├── NoteList.jsx
+│   │       │   ├── NoteCard.jsx
+│   │       │   ├── NoteDisplay.jsx
+│   │       │   └── NoteEditForm.jsx
+│   │       └── piece/
+│   │           ├── PiecePage.jsx
+│   │           ├── PieceDetailPage.jsx
+│   │           ├── PieceForm.jsx
+│   │           ├── PieceList.jsx
+│   │           └── PieceCard.jsx
+│   └── vite.config.js          # Proxies /api requests to Express in development
+└── server/                     # Express + Postgres API
+    ├── index.js                # App entry point, route definitions
     ├── controllers/
-    │   ├── authControllers.js  # register, login, logout, getMe
-    │   └── todoControllers.js  # list, create, update, delete todos
+    │   ├── authControllers.js
+    │   ├── entryController.js
+    │   ├── entryInstrumentController.js
+    │   ├── entryPieceController.js
+    │   ├── instrumentController.js
+    │   ├── milestoneController.js
+    │   ├── noteController.js
+    │   └── pieceController.js
     ├── models/
-    │   ├── userModel.js    # SQL queries for the users table
-    │   └── todoModel.js    # SQL queries for the todos table
+    │   ├── userModel.js
+    │   ├── entryModel.js
+    │   ├── entryInstrumentModel.js
+    │   ├── entryPieceModel.js
+    │   ├── instrumentModel.js
+    │   ├── milestoneModel.js
+    │   ├── noteModel.js
+    │   └── pieceModel.js
     ├── middleware/
     │   ├── checkAuthentication.js  # Blocks unauthenticated requests
-    │   └── logRoutes.js            # Logs each incoming request
+    │   └── logRoutes.js
     └── db/
-        ├── pool.js         # Postgres connection pool
-        └── seed.js         # Creates tables and inserts sample data
+        ├── pool.js             # Postgres connection pool
+        └── seed.js             # Creates tables and inserts sample data
 ```
